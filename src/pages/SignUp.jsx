@@ -133,7 +133,7 @@ function SignUp() {
         />
         {/* Passwords */}
         <input
-          type="text"
+          type="password"
           className="form-control  mx-4 max-w-80"
           placeholder="Password"
           aria-label="Password"
@@ -142,7 +142,7 @@ function SignUp() {
         />
 
         <input
-          type="text"
+          type="password"
           className="form-control  mx-4 max-w-80"
           placeholder="Confirm Password"
           aria-label="Confirm Password"

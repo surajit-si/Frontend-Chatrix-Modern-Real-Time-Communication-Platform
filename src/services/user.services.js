@@ -11,4 +11,10 @@ const createAccount = (data) => {
   });
 };
 
-export { getUser, createAccount };
+const logIn = (data) => {
+  return axios.post(`${DEFAULT_URL}/api/v1/users/login`, data, {
+    withCredentials: true,
+  });
+};
+
+export { getUser, createAccount, logIn };

@@ -1,24 +1,54 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { logIn } from "../services/user.services";
 
 function SignIn() {
   const [isError, setIsError] = useState(false);
   const alartComp = useRef();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    const usernameOrEmail = formData.get("usernameOrEmail").trim();
+    const password = formData.get("password").trim();
+
+    const postFormData = new FormData();
+    usernameOrEmail.includes("@gmail.com")
+      ? postFormData.append("email", usernameOrEmail)
+      : postFormData.append("username", usernameOrEmail);
+
+    postFormData.append("password", password);
+    try {
+      const response = await logIn(postFormData);
+      console.log(response.data.data.updatedUser.isVerified);
+      //redirect to destination
+      response.data.data.updatedUser.isVerified
+        ? navigate("/home")
+        : navigate("/varify-email");
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
   return (
     <>
       <nav className=" flex justify-between mt-2 border-b border-[#00000020] pb-1.5 shadow">
         <h3 className="ml-4">Chatrix</h3>
         <span className="mr-2">
-          <Link to={"/get-help"} className="btn btn-primary mx-2">
-            Get help
+          <Link to={"/sign-up"} className="btn btn-primary mx-2">
+            SignUp
           </Link>
         </span>
       </nav>
       <form
         className="p-2 border min-h-40 mx-auto mt-10 flex flex-col items-center gap-2 shrink max-w-100"
-        onSubmit={(e) => {}}
+        onSubmit={(e) => {
+          handleSubmit(e);
+        }}
       >
-        <p className="font-light text-2xl">Enter your details</p>
+        <p className="font-light text-2xl">Login</p>
         {/* Alart */}
 
         <div
@@ -29,60 +59,21 @@ function SignIn() {
           There, error will be appear
         </div>
 
-        {/* Full Name */}
+        {/* Username / Email */}
         <input
           type="text"
           className="form-control mx-4 max-w-80"
-          placeholder="Full Name"
-          aria-label="Full Name"
-          name="fullName"
+          placeholder="Username/Email"
+          aria-label="Username/Email"
+          name="usernameOrEmail"
         />
-        {/* Username */}
+        {/* Password */}
         <input
-          type="text"
+          type="password"
           className="form-control mx-4 max-w-80"
-          placeholder="Username"
-          aria-label="Username"
-          name="username"
-        />
-        {/* Email */}
-        <div className="input-group mx-4 max-w-80">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Email"
-            aria-label="Email"
-            aria-describedby="basic-addon2 "
-            name="email"
-          />
-          <span className="input-group-text" id="basic-addon2">
-            @gmail.com
-          </span>
-        </div>
-        {/* Avatar */}
-        <input
-          type="file"
-          accept="image/*"
-          className="form-control mx-4 max-w-80"
-          name="avatar"
-        />
-        {/* Passwords */}
-        <input
-          type="text"
-          className="form-control  mx-4 max-w-80"
           placeholder="Password"
           aria-label="Password"
-          aria-describedby="basic-addon1"
           name="password"
-        />
-
-        <input
-          type="text"
-          className="form-control  mx-4 max-w-80"
-          placeholder="Confirm Password"
-          aria-label="Confirm Password"
-          aria-describedby="basic-addon1"
-          name="confim-password"
         />
         {/* Submit */}
         <button className="btn btn-primary mx-4 max-w-80 w-full" type="submit">
