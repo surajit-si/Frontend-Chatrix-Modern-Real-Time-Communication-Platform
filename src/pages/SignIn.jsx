@@ -1,87 +1,22 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { createAccount } from "../services/user.services";
-import { useNavigate } from "react-router-dom";
 
-function SignUp() {
-  const alartComp = useRef();
+function SignIn() {
   const [isError, setIsError] = useState(false);
-  const [postData, setPostData] = useState({});
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e) => {
-    const checkpassword = (password, confirmPassword) => {
-      if (password === confirmPassword) {
-        return password;
-      }
-      return undefined;
-    };
-
-    e.preventDefault();
-    const formData = new FormData(e.target);
-
-    const fullName = formData.get("fullName").trim();
-    const email = formData.get("email").trim();
-    const username = formData.get("username").trim();
-    const avatar = formData.get("avatar");
-    const password = checkpassword(
-      formData.get("password").trim(),
-      formData.get("confim-password").trim(),
-    );
-
-    if (!password) {
-      alartComp.current.textContent = "Password is not valid";
-      setIsError(true);
-      return;
-    }
-
-    if (!email.includes("@gmail.com")) {
-      alartComp.current.textContent = "Email must contain @gmail.com";
-      setIsError(true);
-      return;
-    }
-
-    if (!avatar) {
-      alartComp.current.textContent = "Please import Avatar";
-      setIsError(true);
-      return;
-    }
-
-    const postFormData = new FormData();
-    postFormData.append("fullName", fullName);
-    postFormData.append("email", email);
-    postFormData.append("username", username);
-    postFormData.append("password", password);
-    postFormData.append("avatar", avatar);
-
-    try {
-      const res = await createAccount(postFormData);
-      setPostData(res.data);
-      setIsError(false);
-      navigate("/sign-in", { replace: true });
-    } catch (err) {
-      const errorData = err?.response?.data || {};
-      setPostData(errorData);
-      alartComp.current.textContent = errorData.message || "An error occurred";
-      setIsError(true);
-    }
-  };
-
+  const alartComp = useRef();
   return (
     <>
       <nav className=" flex justify-between mt-2 border-b border-[#00000020] pb-1.5 shadow">
         <h3 className="ml-4">Chatrix</h3>
         <span className="mr-2">
-          <Link to={"/sign-in"} class="btn btn-primary mx-2">
-            Sign in
+          <Link to={"/get-help"} className="btn btn-primary mx-2">
+            Get help
           </Link>
         </span>
       </nav>
       <form
         className="p-2 border min-h-40 mx-auto mt-10 flex flex-col items-center gap-2 shrink max-w-100"
-        onSubmit={(e) => {
-          handleSubmit(e);
-        }}
+        onSubmit={(e) => {}}
       >
         <p className="font-light text-2xl">Enter your details</p>
         {/* Alart */}
@@ -157,5 +92,4 @@ function SignUp() {
     </>
   );
 }
-
-export default SignUp;
+export default SignIn;

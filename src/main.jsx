@@ -5,10 +5,12 @@ import LandingPage from "./pages/LandingPage.jsx";
 import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import SignUp from "./pages/SignUp.jsx";
+import SignIn from "./pages/SignIn.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
   { path: "/sign-up", element: <SignUp /> },
+  { path: "/sign-in", element: <SignIn /> },
 ]);
 
 createRoot(document.getElementById("root")).render(

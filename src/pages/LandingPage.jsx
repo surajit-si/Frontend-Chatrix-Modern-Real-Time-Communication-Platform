@@ -28,7 +28,7 @@ function LandingPage() {
           <Link to={"/sign-up"} class="btn btn-primary mx-2">
             Sign up
           </Link>
-          <Link to={"sign-in"} class="btn btn-outline-primary">
+          <Link to={"/sign-in"} class="btn btn-outline-primary">
             Sign in
           </Link>
         </span>
