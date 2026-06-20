@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { resendOtp, sendOTP, verifyOtp } from "../services/user.services";
 
@@ -17,7 +17,9 @@ function VerifyEmail() {
     }
   }
 
-  sendEmail();
+  useEffect(() => {
+    sendEmail();
+  }, []);
 
   //handle submit
   const handleSubmit = async (e) => {
@@ -54,7 +56,7 @@ function VerifyEmail() {
       setIsError(true);
       return;
     }
-    //===================Re-send OTP===================================
+    //==============Resend OTP==============
     try {
       const response = await resendOtp();
       console.log(response.data);
