@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { resendOtp, verifyOtp } from "../services/user.services";
+import { resendOtp, sendOTP, verifyOtp } from "../services/user.services";
 
 function VerifyEmail() {
   const alartComp = useRef();
@@ -8,6 +8,18 @@ function VerifyEmail() {
   const [isError, setIsError] = useState(false);
   const resendRef = useRef();
 
+  //first otp send
+  async function sendEmail() {
+    try {
+      await sendOTP();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  sendEmail();
+
+  //handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -35,7 +47,7 @@ function VerifyEmail() {
     //remove err msg
     setIsError(false);
   };
-
+  //handle resend
   const handleResend = async () => {
     if (resendRef.current.textContent != "resend OTP") {
       alartComp.current.textContent = `please wait for cooldown`;

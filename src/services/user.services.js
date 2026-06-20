@@ -28,4 +28,10 @@ const resendOtp = () => {
     withCredentials: true,
   });
 };
-export { getUser, createAccount, logIn, verifyOtp,resendOtp };
+
+const sendOTP = () => {
+  return axios.get(`${DEFAULT_URL}/api/v1/users/verify-email`, {
+    withCredentials: true,
+  });
+};
+export { getUser, createAccount, logIn, verifyOtp, resendOtp, sendOTP };
