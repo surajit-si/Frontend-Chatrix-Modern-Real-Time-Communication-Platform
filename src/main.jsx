@@ -6,11 +6,13 @@ import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import SignUp from "./pages/SignUp.jsx";
 import SignIn from "./pages/SignIn.jsx";
+import VerifyEmail from "./pages/VerifyEmail.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
   { path: "/sign-up", element: <SignUp /> },
   { path: "/sign-in", element: <SignIn /> },
+  { path: "/varify-email", element: <VerifyEmail /> },
 ]);
 
 createRoot(document.getElementById("root")).render(

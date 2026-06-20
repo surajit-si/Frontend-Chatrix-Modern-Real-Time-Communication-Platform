@@ -17,4 +17,15 @@ const logIn = (data) => {
   });
 };
 
-export { getUser, createAccount, logIn };
+const verifyOtp = (data) => {
+  return axios.post(`${DEFAULT_URL}/api/v1/users/verify-otp`, data, {
+    withCredentials: true,
+  });
+};
+
+const resendOtp = () => {
+  return axios.get(`${DEFAULT_URL}/api/v1/users/resend-otp`, {
+    withCredentials: true,
+  });
+};
+export { getUser, createAccount, logIn, verifyOtp,resendOtp };

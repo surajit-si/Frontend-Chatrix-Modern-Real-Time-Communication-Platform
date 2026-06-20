@@ -15,9 +15,15 @@ function LandingPage() {
         err.response.data && setUserData(err.response.data);
       });
   }, []);
-  console.log(userData.statusCode);
+  console.log(userData.data?.profile?.isVerified);
   const navigate = useNavigate();
-  userData.statusCode == 200 && navigate("/home", { replace: true });
+  userData.statusCode == 200 &&
+    userData.data.profile.isVerified == true &&
+    navigate("/home", { replace: true });
+
+  userData.statusCode == 200 &&
+    userData.data.profile.isVerified == false &&
+    navigate("/varify-email", { replace: true });
 
   return (
     <>
