@@ -10,6 +10,7 @@ function SignUp() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     const checkpassword = (password, confirmPassword) => {
       if (password === confirmPassword) {
         return password;
@@ -17,7 +18,6 @@ function SignUp() {
       return undefined;
     };
 
-    e.preventDefault();
     const formData = new FormData(e.target);
 
     const fullName = formData.get("fullName").trim();
