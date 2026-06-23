@@ -72,7 +72,7 @@ function SignUp() {
       <nav className=" flex justify-between mt-2 border-b border-[#00000020] pb-1.5 shadow">
         <h3 className="ml-4">Chatrix</h3>
         <span className="mr-2">
-          <Link to={"/sign-in"} class="btn btn-primary mx-2">
+          <Link to={"/sign-in"} className="btn btn-primary mx-2">
             Sign in
           </Link>
         </span>

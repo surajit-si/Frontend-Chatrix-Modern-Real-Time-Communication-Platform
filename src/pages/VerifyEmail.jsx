@@ -116,7 +116,7 @@ function VerifyEmail() {
         <p
           href="#"
           ref={resendRef}
-          class="link-secondary my-0 py-0 cursor-pointer hover:underline"
+          className="link-secondary my-0 py-0 cursor-pointer hover:underline"
           onClick={() => {
             handleResend();
           }}

@@ -1,1 +1,44 @@
 @import "tailwindcss";
+
+:root {
+  --bg-dark: hsl(0, 0%, 0%);
+  --bg: hsl(0, 0%, 5%);
+  --bg-light: hsl(0, 0%, 10%);
+  --text: hsl(0, 0%, 95%);
+  --text-semi: hsl(0, 0%, 75%);
+  --text-muted: hsl(0, 0%, 50%);
+  --border: hsl(0, 0%, 30%);
+  --border-primary: hsl(216, 80%, 50%);
+  --gradient: linear-gradient(0deg, var(--bg), var(--bg-dark));
+  --highlight: hsl(0, 0%, 60%);
+  --primary: hsl(216, 90%, 44%);
+  --secondary: hsl(216, 80%, 50%);
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+* {
+  scrollbar-width: none;
+}
+
+body {
+  background: var(--bg);
+}
+
+/* .light {
+  --bg-light: hsl(0, 0, 100%);
+  --bg: hsl(0, 0%, 95%);
+  --bg-dark: hsl(0, 0%, 90%);
+  --text: hsl(0, 0, 5%);
+  --text-muted: hsl(0, 0, 70%);
+  --border: hsl(0, 0, 70%);
+  --gradient: linear-gradient(0deg, var(--bg), var(--bg-dark));
+}
+ */
+
+.henny-penny-regular {
+  font-family: "Henny Penny", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}

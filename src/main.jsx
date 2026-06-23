@@ -7,12 +7,14 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import SignUp from "./pages/SignUp.jsx";
 import SignIn from "./pages/SignIn.jsx";
 import VerifyEmail from "./pages/VerifyEmail.jsx";
+import Home from "./pages/Home.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
   { path: "/sign-up", element: <SignUp /> },
   { path: "/sign-in", element: <SignIn /> },
   { path: "/varify-email", element: <VerifyEmail /> },
+  { path: "/home", element: <Home /> },
 ]);
 
 createRoot(document.getElementById("root")).render(

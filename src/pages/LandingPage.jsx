@@ -1,6 +1,11 @@
+import "../index.css";
 import { useEffect, useState } from "react";
 import { getUser } from "../services/user.services.js";
 import { Link, useNavigate } from "react-router-dom";
+
+//components
+import Navbar from "../components/Navbar.jsx";
+import CurrTabButton from "../components/CurrTabButton.jsx";
 
 function LandingPage() {
   const [userData, setUserData] = useState({});
@@ -26,27 +31,17 @@ function LandingPage() {
     navigate("/varify-email", { replace: true });
 
   return (
-    <>
+    <div className="">
       {/* Navbar */}
-      <nav className=" flex justify-between mt-2 border-b border-[#00000020] pb-1.5 shadow">
-        <h3 className="ml-4">Chatrix</h3>
-        <span className="mr-2">
-          <Link to={"/sign-up"} class="btn btn-primary mx-2">
-            Sign up
-          </Link>
-          <Link to={"/sign-in"} class="btn btn-outline-primary">
-            Sign in
-          </Link>
-        </span>
-      </nav>
+      <Navbar />
       {/* Body */}
       <div className="w-screen h-screen">
-        <p className="text-center text-[clamp(10vw,20%,60vw)] tracking-tight font-bold text-[#000]">
+        <p className="text-center text-[clamp(10vw,20%,60vw)] tracking-tight font-bold text-(--text-muted) ">
           Welcome To <br />
-          <p className="">Chatrix</p>
+          <span className="text-(--text)">Chatrix</span>
         </p>
       </div>
-    </>
+    </div>
   );
 }
 
