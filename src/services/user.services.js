@@ -34,4 +34,19 @@ const sendOTP = () => {
     withCredentials: true,
   });
 };
-export { getUser, createAccount, logIn, verifyOtp, resendOtp, sendOTP };
+
+const createConversation = (data) => {
+  return axios.post(`${DEFAULT_URL}/api/v1/users/create-conversation`, data, {
+    withCredentials: true,
+  });
+};
+
+export {
+  getUser,
+  createAccount,
+  logIn,
+  verifyOtp,
+  resendOtp,
+  sendOTP,
+  createConversation,
+};

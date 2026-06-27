@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 //components
 import Navbar from "../components/Navbar.jsx";
-import CurrTabButton from "../components/CurrTabButton.jsx";
+
 
 function LandingPage() {
   const [userData, setUserData] = useState({});

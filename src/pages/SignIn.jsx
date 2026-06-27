@@ -48,7 +48,7 @@ function SignIn() {
           handleSubmit(e);
         }}
       >
-        <p className="font-light text-2xl">Login</p>
+        <p className="font-light text-2xl text-(--text) ">Login</p>
         {/* Alart */}
 
         <div
