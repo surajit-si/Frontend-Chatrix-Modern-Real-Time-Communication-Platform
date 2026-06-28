@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { IoCloudUploadOutline } from "react-icons/io5";
-import { useEffect, useRef, useState } from "react";
+import {  useRef, useState } from "react";
 import useOnClickOutside from "../hooks/useOnClickOutside";
 import { createConversation } from "../services/user.services";
 
@@ -39,8 +39,9 @@ function LeftSideHome() {
       const response = await createConversation(postFormData);
       response.data && setPreview(null);
       groupNameInput.current.value = null;
+      setIsCreating(false)
     } catch (err) {
-      console.log(err.response.data);
+      console.log(err?.response?.data);
     }
   };
 

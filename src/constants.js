@@ -1,4 +1,4 @@
-const DEFAULT_URL = "http://localhost:2007";
+const DEFAULT_URL = "http://localhost:2007/api/v1";
 
 export { DEFAULT_URL };
 //http://localhost:2007
