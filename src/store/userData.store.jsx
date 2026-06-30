@@ -1,18 +1,16 @@
-import { createContext, useEffect, useState } from "react";
-import axios from "axios";
+import { createContext, useState } from "react";
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const UserContext = createContext();
 
 function UserStore({ children }) {
-  const [userData, setUserData] = useState();
-  const userContext = createContext();
-  //get user for first time
-  useEffect(() => {
-    const controller = new AbortController();
-    const { signal } = controller;
+  const [userData, setUserData] = useState(null);
 
-    //
-  }, []);
-
-  return <userContext.Provider value={{}}>{children}</userContext.Provider>;
+  return (
+    <UserContext.Provider value={{ userData, setUserData }}>
+      {children}
+    </UserContext.Provider>
+  );
 }
 
 export default UserStore;

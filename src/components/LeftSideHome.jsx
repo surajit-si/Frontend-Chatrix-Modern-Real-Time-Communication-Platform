@@ -1,12 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 //icons
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { IoCloudUploadOutline } from "react-icons/io5";
-import {  useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import useOnClickOutside from "../hooks/useOnClickOutside";
-import { createConversation } from "../services/user.services";
+import { createConversation, getUser } from "../services/user.services";
+import { UserContext } from "../store/userData.store";
 
 function LeftSideHome() {
   const [preview, setPreview] = useState(null);
@@ -14,6 +15,37 @@ function LeftSideHome() {
   const createGroupContainer = useRef();
   const createGroupButton = useRef();
   const groupNameInput = useRef();
+
+  //get user
+  const { userData, setUserData } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    getUser({ signal })
+      .then((res) => {
+        if (res.data) {
+          setUserData(res.data);
+        }
+        console.log(res);
+      })
+      .catch((err) => {
+        err.response.data && setUserData(null);
+        // err.response.data && setUserData(err.response.data);
+        navigate("/");
+      });
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
+
+  if (userData === null) {
+    console.log(`userData was null`);
+  } else if (userData !== null) {
+    console.log(userData);
+  }
 
   const handleFileChange = (event) => {
     const file = event.target.files?.[0];
@@ -23,6 +55,7 @@ function LeftSideHome() {
     setPreview(previewUrl);
   };
 
+  //create Conversation
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -36,10 +69,16 @@ function LeftSideHome() {
     postFormData.append("groupName", groupName);
 
     try {
-      const response = await createConversation(postFormData);
-      response.data && setPreview(null);
+      await createConversation(postFormData);
+      setPreview(null);
       groupNameInput.current.value = null;
-      setIsCreating(false)
+      try {
+        const response = await getUser();
+        setUserData(response.data);
+      } catch (error) {
+        null;
+      }
+      setIsCreating(false);
     } catch (err) {
       console.log(err?.response?.data);
     }
@@ -137,31 +176,35 @@ function LeftSideHome() {
 
       {/* List Contacts */}
       <ul className="p-1 ">
-        <li className="flex text-(--text) items-center py-2 relative border-b border-(--border) ">
-          {/* Profile */}
-          <div className=" aspect-square h-11 rounded-full ml-2 border border-(--border)! overflow-hidden ">
-            <img
-              src=""
-              alt="profile"
-              className="h-full w-full outline-none object-cover block"
-            />
-          </div>
-          {/* Deteals */}
-          <span className="ml-2 leading-1">
-            {/* Name */}
-            <p className="">Surajit Si</p>
-            {/* Last Message */}
-            <span className="text-(--text-muted) text-[0.8rem] ">
-              <span className="">You:</span>
-              <span className="">Hello</span>
-            </span>
-          </span>
+        {userData?.data?.conversations.map((conversation) => {
+          return (
+            <li className="flex text-(--text) items-center py-2 relative border-b border-(--border) ">
+              {/* Profile */}
+              <div className=" aspect-square h-11 rounded-full ml-2 border border-(--border)! overflow-hidden ">
+                <img
+                  src={conversation.groupAvatar}
+                  alt="profile"
+                  className="h-full w-full outline-none object-cover block"
+                />
+              </div>
+              {/* Deteals */}
+              <span className="ml-2 leading-1">
+                {/* Name */}
+                <p className="">{conversation.groupName}</p>
+                {/* Last Message */}
+                <span className="text-(--text-muted) text-[0.8rem] ">
+                  <span className="">You:</span>
+                  <span className="">Hello</span>
+                </span>
+              </span>
 
-          {/* Date */}
-          <span className="absolute right-0 mr-2 text-(--text-muted) text-sm ">
-            16/4/26
-          </span>
-        </li>
+              {/* Date */}
+              <span className="absolute right-0 mr-2 text-(--text-muted) text-sm ">
+                16/4/26
+              </span>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

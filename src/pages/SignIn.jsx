@@ -43,7 +43,7 @@ function SignIn() {
         </span>
       </nav>
       <form
-        className="p-2 border min-h-40 mx-auto mt-10 flex flex-col items-center gap-2 shrink max-w-100"
+        className="p-2 pb-3 border border-(--border)! rounded-2xl min-h-40 mx-auto mt-10 flex flex-col items-center gap-2 shrink max-w-100"
         onSubmit={(e) => {
           handleSubmit(e);
         }}
@@ -76,7 +76,10 @@ function SignIn() {
           name="password"
         />
         {/* Submit */}
-        <button className="btn btn-primary mx-4 max-w-80 w-full" type="submit">
+        <button
+          className="btn btn-primary mx-4 max-w-80 w-full text-(--text) "
+          type="submit"
+        >
           Submit
         </button>
       </form>

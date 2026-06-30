@@ -60,7 +60,7 @@ function SignUp() {
       setIsError(false);
       navigate("/sign-in", { replace: true });
     } catch (err) {
-      const errorData = err?.response?.data || {};
+      const errorData = err.response?.data || {};
       setPostData(errorData);
       alartComp.current.textContent = errorData.message || "An error occurred";
       setIsError(true);
@@ -70,7 +70,7 @@ function SignUp() {
   return (
     <>
       <nav className=" flex justify-between mt-2 border-b border-[#00000020] pb-1.5 shadow">
-        <h3 className="ml-4">Chatrix</h3>
+        <h3 className="ml-4 text-(--text)! ">Chatrix</h3>
         <span className="mr-2">
           <Link to={"/sign-in"} className="btn btn-primary mx-2">
             Sign in
@@ -78,12 +78,12 @@ function SignUp() {
         </span>
       </nav>
       <form
-        className="p-2 border min-h-40 mx-auto mt-10 flex flex-col items-center gap-2 shrink max-w-100"
+        className="p-2 border border-(--border)! rounded-3xl min-h-40 mx-auto mt-10 flex flex-col items-center gap-2 shrink max-w-100"
         onSubmit={(e) => {
           handleSubmit(e);
         }}
       >
-        <p className="font-light text-2xl">Enter your details</p>
+        <p className="font-light text-2xl text-(--text-muted) ">Enter your details</p>
         {/* Alart */}
 
         <div
@@ -150,7 +150,7 @@ function SignUp() {
           name="confim-password"
         />
         {/* Submit */}
-        <button className="btn btn-primary mx-4 max-w-80 w-full" type="submit">
+        <button className="btn btn-primary mx-4 max-w-80 w-full text-(--text) " type="submit">
           Submit
         </button>
       </form>

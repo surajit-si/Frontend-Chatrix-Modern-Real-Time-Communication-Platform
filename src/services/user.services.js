@@ -1,30 +1,29 @@
 import axios from "axios";
-import { DEFAULT_URL } from "../constants.js";
-import apiClient from "./apiClient.js";
 //custom axios
+import apiClient from "./apiClient.js";
 
-const getUser = () => {
-  return axios.get(`/api/v1/users/`);
+const getUser = (config = {}) => {
+  return apiClient.get(`/users/`, config);
 };
 
 const createAccount = (data) => {
-  return axios.post(`/api/v1/users/register`, data);
+  return apiClient.post(`/users/register`, data);
 };
 
 const logIn = (data) => {
-  return axios.post(`/api/v1/users/login`, data);
+  return apiClient.post(`/users/login`, data);
 };
 
 const verifyOtp = (data) => {
-  return axios.post(`/api/v1/users/verify-otp`, data);
+  return apiClient.post(`/users/verify-otp`, data);
 };
 
 const resendOtp = () => {
-  return axios.get(`/api/v1/users/resend-otp`);
+  return apiClient.get(`/users/resend-otp`);
 };
 
 const sendOTP = () => {
-  return axios.get(`/api/v1/users/verify-email`);
+  return apiClient.get(`/users/verify-email`);
 };
 
 const createConversation = (data) => {
