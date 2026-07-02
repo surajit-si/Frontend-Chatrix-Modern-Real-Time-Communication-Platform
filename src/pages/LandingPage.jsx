@@ -24,7 +24,7 @@ function LandingPage() {
         // err.response.data && setUserData(null);
         console.log(err);
 
-        err.response.data && setUserData(err.response.data);
+        err?.response?.data && setUserData(err?.response.data);
       });
 
     return () => {

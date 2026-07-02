@@ -9,6 +9,7 @@ import SignIn from "./pages/SignIn.jsx";
 import VerifyEmail from "./pages/VerifyEmail.jsx";
 import Home from "./pages/Home.jsx";
 import UserStore from "./store/userData.store.jsx";
+import SelectedGroup from "./store/currentGroup.store.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
@@ -20,9 +21,11 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <UserStore>
-      <RouterProvider router={router} />
-    </UserStore>
-    <App />
+    <SelectedGroup>
+      <UserStore>
+        <RouterProvider router={router} />
+      </UserStore>
+      <App />
+    </SelectedGroup>
   </StrictMode>,
 );

@@ -8,6 +8,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import useOnClickOutside from "../hooks/useOnClickOutside";
 import { createConversation, getUser } from "../services/user.services";
 import { UserContext } from "../store/userData.store";
+import { selectedGroupContext } from "../store/currentGroup.store";
 
 function LeftSideHome() {
   const [preview, setPreview] = useState(null);
@@ -16,36 +17,8 @@ function LeftSideHome() {
   const createGroupButton = useRef();
   const groupNameInput = useRef();
 
-  //get user
   const { userData, setUserData } = useContext(UserContext);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    getUser({ signal })
-      .then((res) => {
-        if (res.data) {
-          setUserData(res.data);
-        }
-        console.log(res);
-      })
-      .catch((err) => {
-        err.response.data && setUserData(null);
-        // err.response.data && setUserData(err.response.data);
-        navigate("/");
-      });
-
-    return () => {
-      controller.abort();
-    };
-  }, []);
-
-  if (userData === null) {
-    console.log(`userData was null`);
-  } else if (userData !== null) {
-    console.log(userData);
-  }
+  const { selectedGroup, setSelectedGroup } = useContext(selectedGroupContext);
 
   const handleFileChange = (event) => {
     const file = event.target.files?.[0];
@@ -82,6 +55,12 @@ function LeftSideHome() {
     } catch (err) {
       console.log(err?.response?.data);
     }
+  };
+
+  //handles the group click in left side
+  const handleGroupClick = (conversation) => {
+    setSelectedGroup(conversation);
+    console.log(conversation);
   };
 
   //handle create group button
@@ -178,7 +157,10 @@ function LeftSideHome() {
       <ul className="p-1 ">
         {userData?.data?.conversations.map((conversation) => {
           return (
-            <li className="flex text-(--text) items-center py-2 relative border-b border-(--border) ">
+            <li
+              className="flex cursor-pointer text-(--text) items-center py-2 relative border-b border-(--border) "
+              onClick={() => handleGroupClick(conversation)}
+            >
               {/* Profile */}
               <div className=" aspect-square h-11 rounded-full ml-2 border border-(--border)! overflow-hidden ">
                 <img
