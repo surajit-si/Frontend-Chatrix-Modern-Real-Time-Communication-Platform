@@ -12,7 +12,7 @@ import { UserContext } from "../store/userData.store.jsx";
 
 function Home() {
   //get user
-  const { userData, setUserData } = useContext(UserContext);
+  const { userData, setUserData, socket } = useContext(UserContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,6 +23,9 @@ function Home() {
         if (res.data) {
           setUserData(res.data);
         }
+        //connect socket
+        socket.connect();
+
         console.log(res.data);
       })
       .catch((err) => {

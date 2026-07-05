@@ -7,9 +7,15 @@ import { IoSendSharp } from "react-icons/io5";
 import MessageContainerByMe from "./MessageContainerByMe";
 import MessageContainerByOthers from "./MessageContainerByOthers";
 import { selectedGroupContext } from "../store/currentGroup.store";
+import { UserContext } from "../store/userData.store";
+import { getUser } from "../services/user.services";
 
 function RightSideHome() {
+  //it tells which group is currently set
   const { selectedGroup, setSelectedGroup } = useContext(selectedGroupContext);
+
+  //get userdata and socket
+  const { userData, setUserData, socket } = useContext(UserContext);
 
   //set the typing text according to ws responces.
   const [typing, setTyping] = useState("Panther is typing...");
@@ -18,8 +24,42 @@ function RightSideHome() {
 
   const sendMessage = (e) => {
     e.preventDefault();
-    console.log(`Sending messages`);
+    console.log(`Sending messages Started`);
+
+    const formData = new FormData(e.target);
+
+    const messageText = formData.get("messageText");
+
+    console.log(messageText);
+
+    socket.emit("send-message", {
+      currConversation: selectedGroup,
+      text: messageText,
+    });
   };
+
+  //error handles
+  //unauth
+  socket.on("connect_error", async (err) => {
+    if (err.message === "Unauthorized") {
+      await getUser();
+      socket.connect();
+    }
+  });
+  //other errors
+
+  socket.on("message-error", (err) => {
+    //no premition
+    if (err.type === "parmission-error") {
+      console.log(err);
+    } else if (err.type === "not-found") {
+      console.log(err);
+    } else if (err.type === "db-error") {
+      console.log(err);
+    } else if (err.type === "internal-server-error") {
+      console.log(err);
+    }
+  });
 
   return (
     <div className="w-full max-w-2/3 max-lg:max-w-1/2 ">

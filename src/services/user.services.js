@@ -2,6 +2,8 @@ import axios from "axios";
 //custom axios
 import apiClient from "./apiClient.js";
 
+
+
 const getUser = (config = {}) => {
   return apiClient.get(`/users/`, config);
 };
