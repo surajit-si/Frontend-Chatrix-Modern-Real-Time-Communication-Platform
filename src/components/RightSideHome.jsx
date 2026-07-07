@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 //icons
 import { IoSearchSharp } from "react-icons/io5";
 import { HiDotsVertical } from "react-icons/hi";
@@ -8,11 +8,43 @@ import MessageContainerByMe from "./MessageContainerByMe";
 import MessageContainerByOthers from "./MessageContainerByOthers";
 import { selectedGroupContext } from "../store/currentGroup.store";
 import { UserContext } from "../store/userData.store";
-import { getUser } from "../services/user.services";
+import { addMember, getUser } from "../services/user.services";
+import useOnClickOutside from "../hooks/useOnClickOutside";
 
 function RightSideHome() {
+  //open menu if user clicks
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const conversationMenu = useRef();
+  const menuButton = useRef();
+  useOnClickOutside(conversationMenu, () => setIsMenuOpen(false), isMenuOpen, [
+    menuButton,
+  ]);
+
+  //add new member
+  const [isAddingNewMember, setIsAddingNewMember] = useState(true);
+
   //it tells which group is currently set
   const { selectedGroup, setSelectedGroup } = useContext(selectedGroupContext);
+
+  //addMember to conversation
+  const addConversationMembers = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const usernameOrEmail = formData.get("usernameOrEmail");
+
+    const postFormData = new FormData();
+    postFormData.append("usernameOrEmail", usernameOrEmail);
+    postFormData.append("conversationId", selectedGroup?._id);
+
+    console.log(postFormData);
+    try {
+      const response = await addMember(postFormData);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error.response?.data);
+    }
+  };
 
   //get userdata and socket
   const { userData, setUserData, socket } = useContext(UserContext);
@@ -21,45 +53,59 @@ function RightSideHome() {
   const [typing, setTyping] = useState("Panther is typing...");
 
   //send message when type enter or click the submit button
-
   const sendMessage = (e) => {
     e.preventDefault();
-    console.log(`Sending messages Started`);
-
     const formData = new FormData(e.target);
-
     const messageText = formData.get("messageText");
 
-    console.log(messageText);
+    if (!messageText?.trim() || !selectedGroup) return;
 
     socket.emit("send-message", {
       currConversation: selectedGroup,
-      text: messageText,
+      text: messageText.trim(),
     });
   };
 
-  //error handles
-  //unauth
-  socket.on("connect_error", async (err) => {
-    if (err.message === "Unauthorized") {
-      await getUser();
-      socket.connect();
-    }
-  });
-  //other errors
+  useEffect(() => {
+    if (!socket) return;
 
-  socket.on("message-error", (err) => {
-    //no premition
-    if (err.type === "parmission-error") {
-      console.log(err);
-    } else if (err.type === "not-found") {
-      console.log(err);
-    } else if (err.type === "db-error") {
-      console.log(err);
-    } else if (err.type === "internal-server-error") {
-      console.log(err);
-    }
-  });
+    const handleIncomingMessage = (data) => {
+      console.log(data);
+    };
+
+    const handleConnectError = async (err) => {
+      if (err.message === "Unauthorized") {
+        try {
+          await getUser();
+          socket.connect();
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+
+    const handleMessageError = (err) => {
+      if (err.type === "parmission-error") {
+        console.log(err);
+      } else if (err.type === "not-found") {
+        console.log(err);
+      } else if (err.type === "db-error") {
+        console.log(err);
+      } else if (err.type === "internal-server-error") {
+        console.log(err);
+      }
+    };
+
+    socket.on("new-message", handleIncomingMessage);
+    socket.on("connect_error", handleConnectError);
+    socket.on("message-error", handleMessageError);
+
+    return () => {
+      socket.off("new-message", handleIncomingMessage);
+      socket.off("connect_error", handleConnectError);
+      socket.off("message-error", handleMessageError);
+    };
+  }, [socket]);
 
   return (
     <div className="w-full max-w-2/3 max-lg:max-w-1/2 ">
@@ -106,7 +152,53 @@ function RightSideHome() {
             {/* Search, Menu etc */}
             <div className="flex gap-4 mr-2">
               <IoSearchSharp className="text-(--text) text-[1.3rem] box-content! p-2 cursor-pointer hover:bg-(--bg-light) rounded-full " />
-              <HiDotsVertical className="text-(--text) text-[1.3rem] box-content! p-2 cursor-pointer hover:bg-(--bg-light) rounded-full " />
+              {/* three dots */}
+              <div className="relative" ref={menuButton}>
+                <HiDotsVertical
+                  className="text-(--text) text-[1.3rem] box-content! p-2 cursor-pointer hover:bg-(--bg-light) rounded-full  "
+                  onClick={() => {
+                    isMenuOpen ? setIsMenuOpen(false) : setIsMenuOpen(true);
+                  }}
+                />
+
+                {/* menu */}
+                {isMenuOpen && (
+                  <ul
+                    className="conversationMenu absolute border border-(--border)! px-3 py-2 right-0 rounded-md bg-(--bg) "
+                    ref={conversationMenu}
+                  >
+                    <li className="conversationOption shrink-0 p-1">
+                      <span className="text-center whitespace-nowrap cursor-pointer text-(--text) ">
+                        Add a member
+                      </span>
+                    </li>
+                  </ul>
+                )}
+                {isAddingNewMember && (
+                  <div
+                    className="conversationMenu absolute border border-(--border)! px-3 py-2 right-0 rounded-md bg-(--bg) "
+                    ref={conversationMenu}
+                  >
+                    <form
+                      className="conversationOption shrink-0 p-1 flex flex-col gap-2"
+                      onSubmit={addConversationMembers}
+                    >
+                      <input
+                        type="text"
+                        name="usernameOrEmail"
+                        placeholder="Enter Username/Email"
+                        className="outline-0 border-(--border)! border rounded-sm pl-2 placeholder:text-(--text-muted) text-md! text-(--text) "
+                      />
+                      <button
+                        type="submit"
+                        className="bg-(--primary) rounded border border-(--border-primary)! "
+                      >
+                        Add
+                      </button>
+                    </form>
+                  </div>
+                )}
+              </div>
             </div>
           </nav>
           <div className="rightBody h-full w-full overflow-x-scroll flex flex-col">

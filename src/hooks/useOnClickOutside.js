@@ -1,12 +1,8 @@
 import { useEffect } from "react";
 
 /**
- * useOnClickOutside
- * Calls `handler` when a click or touch occurs outside the `ref` element.
- *
- * @param {React.RefObject} ref - element ref to watch
- * @param {(event: Event) => void} handler - callback when outside click detected
- * @param {boolean} enabled - whether the hook is active
+  useOnClickOutside
+  Calls `handler` when a click or touch occurs outside the `ref` element.
  */
 export default function useOnClickOutside(
   ref,

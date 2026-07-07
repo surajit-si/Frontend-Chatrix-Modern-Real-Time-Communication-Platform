@@ -2,8 +2,6 @@ import axios from "axios";
 //custom axios
 import apiClient from "./apiClient.js";
 
-
-
 const getUser = (config = {}) => {
   return apiClient.get(`/users/`, config);
 };
@@ -32,6 +30,10 @@ const createConversation = (data) => {
   return apiClient.post(`/users/create-conversation`, data);
 };
 
+const addMember = (data) => {
+  return apiClient.post(`/users/add-member`, data);
+};
+
 export {
   getUser,
   createAccount,
@@ -40,4 +42,5 @@ export {
   resendOtp,
   sendOTP,
   createConversation,
+  addMember,
 };
