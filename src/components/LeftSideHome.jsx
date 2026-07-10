@@ -6,7 +6,11 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { useContext, useEffect, useRef, useState } from "react";
 import useOnClickOutside from "../hooks/useOnClickOutside";
-import { createConversation, getUser } from "../services/user.services";
+import {
+  createConversation,
+  getMessages,
+  getUser,
+} from "../services/user.services";
 import { UserContext } from "../store/userData.store";
 import { selectedGroupContext } from "../store/currentGroup.store";
 
@@ -17,7 +21,13 @@ function LeftSideHome() {
   const createGroupButton = useRef();
   const groupNameInput = useRef();
 
-  const { userData, setUserData } = useContext(UserContext);
+  const {
+    userData,
+    setUserData,
+    conversationMessages,
+    setConversationMessages,
+  } = useContext(UserContext);
+
   const { selectedGroup, setSelectedGroup } = useContext(selectedGroupContext);
 
   const handleFileChange = (event) => {
@@ -58,10 +68,35 @@ function LeftSideHome() {
   };
 
   //handles the group click in left side
-  const handleGroupClick = (conversation) => {
-    setSelectedGroup(conversation);
-    console.log(conversation);
+  const handleGroupClick = async (conversation) => {
+    try {
+      //change Selected group
+      setSelectedGroup(conversation);
+
+      //get messages
+      const postMessages = new FormData();
+      const conversationId = conversation?._id;
+      postMessages.append("conversationId", conversationId);
+
+      const response = await getMessages(postMessages);
+      console.log(response.data.data.messages);
+      //set the rendered messages to a common obj
+      setConversationMessages((prev) => ({
+        ...prev,
+        [conversation._id]: response.data.data.messages,
+      }));
+    } catch (error) {
+      console.error(error);
+      error && console.log(error?.response?.data);
+    }
   };
+
+  //========================TEST================================
+  useEffect(() => {
+    console.log(conversationMessages);
+    console.log(userData?.data.profile._id); //dummy
+  }, [conversationMessages]);
+  //========================TEST================================
 
   //handle create group button
   function createGroupBtnHandler() {
@@ -165,7 +200,7 @@ function LeftSideHome() {
               <div className=" aspect-square h-11 rounded-full ml-2 border border-(--border)! overflow-hidden ">
                 <img
                   src={conversation.groupAvatar}
-                  alt="profile"
+                  alt="group_avatar"
                   className="h-full w-full outline-none object-cover block"
                 />
               </div>

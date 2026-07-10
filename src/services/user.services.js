@@ -34,6 +34,10 @@ const addMember = (data) => {
   return apiClient.post(`/users/add-member`, data);
 };
 
+const getMessages = (data) => {
+  return apiClient.post(`/users/get-messages`, data);
+};
+
 export {
   getUser,
   createAccount,
@@ -43,4 +47,5 @@ export {
   sendOTP,
   createConversation,
   addMember,
+  getMessages
 };

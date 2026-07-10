@@ -16,9 +16,18 @@ export const UserContext = createContext();
 
 function UserStore({ children }) {
   const [userData, setUserData] = useState(null);
+  const [conversationMessages, setConversationMessages] = useState({});
 
   return (
-    <UserContext.Provider value={{ userData, setUserData, socket }}>
+    <UserContext.Provider
+      value={{
+        userData,
+        setUserData,
+        socket,
+        conversationMessages,
+        setConversationMessages,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

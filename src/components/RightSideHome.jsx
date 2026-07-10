@@ -47,7 +47,16 @@ function RightSideHome() {
   };
 
   //get userdata and socket
-  const { userData, setUserData, socket } = useContext(UserContext);
+  const {
+    userData,
+    setUserData,
+    socket,
+    conversationMessages,
+    setConversationMessages,
+  } = useContext(UserContext);
+
+  //userData profile set
+  const userProfile = userData?.data.profile;
 
   //set the typing text according to ws responces.
   const [typing, setTyping] = useState("Panther is typing...");
@@ -225,19 +234,35 @@ function RightSideHome() {
             </div>
 
             {/* messages */}
-            <MessageContainerByMe
-              messageText={"Hello World"}
-              time={"07:34 PM"}
-            />
-            <MessageContainerByMe
-              messageText={"Hello World"}
-              time={"07:34 PM"}
-            />
-            <MessageContainerByOthers
-              messageText={"Hello Guy"}
-              time={"07:35 PM"}
-              sendBy={"Papa Panther"}
-            />
+            {(conversationMessages[selectedGroup._id] || []).map((message) => {
+              if (message?.sender._id == userProfile._id) {
+                const msgDate = new Date(message.createdAt);
+                const msgTime = msgDate.toLocaleTimeString("en-US", {
+                  hour: "2-digit", // Forces two digits (e.g., "05" or "10")
+                  minute: "2-digit", // Forces two digits (e.g., "15")
+                  hour12: true, // Forces AM/PM clock instead of 24-hour clock
+                });
+                return (
+                  <MessageContainerByMe
+                    messageText={message.content}
+                    time={msgTime}
+                  />
+                );
+              } else if (message?.sender._id != userProfile._id) {
+                const msgDate = new Date(message.createdAt);
+                const msgTime = msgDate.toLocaleTimeString("en-US", {
+                  hour: "2-digit", // Forces two digits (e.g., "05" or "10")
+                  minute: "2-digit", // Forces two digits (e.g., "15")
+                  hour12: true, // Forces AM/PM clock instead of 24-hour clock
+                });
+                return (
+                  <MessageContainerByOthers
+                    messageText={message.content}
+                    time={msgTime}
+                  />
+                );
+              }
+            })}
           </div>
         </div>
       )}
