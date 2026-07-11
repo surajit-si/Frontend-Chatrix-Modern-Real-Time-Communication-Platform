@@ -73,13 +73,39 @@ function RightSideHome() {
       currConversation: selectedGroup,
       text: messageText.trim(),
     });
+
+    //update messages array
+    //create message obj
+    const newMessage = {
+      content: messageText.trim(),
+      conversation: selectedGroup,
+      messageType: "text",
+      sender: userData.data.profile,
+      createdAt: Date.now(),
+    };
+
+    console.log(newMessage); //test
+    setConversationMessages((prev) => {
+      const conversationId = selectedGroup._id;
+      return {
+        ...prev,
+        [conversationId]: [...(prev[conversationId] || []), newMessage],
+      };
+    });
   };
 
   useEffect(() => {
     if (!socket) return;
 
     const handleIncomingMessage = (data) => {
-      console.log(data);
+      //set incoming messages to show in viwe-port
+      setConversationMessages((prev) => {
+        const conversationId = data.message.conversation._id;
+        return {
+          ...prev,
+          [conversationId]: [...(prev[conversationId] || []), data.message],
+        };
+      });
     };
 
     const handleConnectError = async (err) => {
