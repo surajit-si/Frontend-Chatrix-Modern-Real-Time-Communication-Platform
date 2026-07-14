@@ -21,7 +21,14 @@ function RightSideHome() {
   ]);
 
   //add new member
-  const [isAddingNewMember, setIsAddingNewMember] = useState(true);
+  const [isAddingNewMember, setIsAddingNewMember] = useState(false);
+  const addingMenu = useRef();
+  useOnClickOutside(
+    addingMenu,
+    () => setIsAddingNewMember(false),
+    isAddingNewMember,
+    [],
+  );
 
   //it tells which group is currently set
   const { selectedGroup, setSelectedGroup } = useContext(selectedGroupContext);
@@ -37,7 +44,7 @@ function RightSideHome() {
     postFormData.append("usernameOrEmail", usernameOrEmail);
     postFormData.append("conversationId", selectedGroup?._id);
 
-    console.log(postFormData);
+    // console.log(postFormData);
     try {
       const response = await addMember(postFormData);
       console.log(response.data);
@@ -56,7 +63,7 @@ function RightSideHome() {
   } = useContext(UserContext);
 
   //userData profile set
-  const userProfile = userData?.data.profile;
+  const userProfile = userData?.profile;
 
   //set the typing text according to ws responces.
   const [typing, setTyping] = useState("Panther is typing...");
@@ -65,6 +72,8 @@ function RightSideHome() {
   const sendMessage = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
+    e.target[0].value = "";
+
     const messageText = formData.get("messageText");
 
     if (!messageText?.trim() || !selectedGroup) return;
@@ -80,7 +89,7 @@ function RightSideHome() {
       content: messageText.trim(),
       conversation: selectedGroup,
       messageType: "text",
-      sender: userData.data.profile,
+      sender: userProfile,
       createdAt: Date.now(),
     };
 
@@ -93,6 +102,16 @@ function RightSideHome() {
       };
     });
   };
+
+  //scroll message container to bottom
+  const messageContainer = useRef();
+  useEffect(() => {
+    if (messageContainer?.current) {
+      requestAnimationFrame(() => {
+        messageContainer.current.scrollTop = messageContainer.current.scrollHeight;
+      });
+    }
+  }, [selectedGroup, conversationMessages[selectedGroup?._id]]);
 
   useEffect(() => {
     if (!socket) return;
@@ -203,7 +222,12 @@ function RightSideHome() {
                     ref={conversationMenu}
                   >
                     <li className="conversationOption shrink-0 p-1">
-                      <span className="text-center whitespace-nowrap cursor-pointer text-(--text) ">
+                      <span
+                        className="text-center whitespace-nowrap cursor-pointer text-(--text) "
+                        onClick={() => {
+                          setIsAddingNewMember(true);
+                        }}
+                      >
                         Add a member
                       </span>
                     </li>
@@ -212,7 +236,7 @@ function RightSideHome() {
                 {isAddingNewMember && (
                   <div
                     className="conversationMenu absolute border border-(--border)! px-3 py-2 right-0 rounded-md bg-(--bg) "
-                    ref={conversationMenu}
+                    ref={addingMenu}
                   >
                     <form
                       className="conversationOption shrink-0 p-1 flex flex-col gap-2"
@@ -236,7 +260,10 @@ function RightSideHome() {
               </div>
             </div>
           </nav>
-          <div className="rightBody h-full w-full overflow-x-scroll flex flex-col">
+          <div
+            className="rightBody h-full w-full overflow-x-scroll flex flex-col box-border pb-32"
+            ref={messageContainer}
+          >
             {/* input Box */}
             <div className="absolute bottom-0 w-full px-2 mx-auto py-2 z-50">
               <form

@@ -12,39 +12,41 @@ import { UserContext } from "../store/userData.store.jsx";
 
 function Home() {
   //get user
-  const { userData, setUserData, socket } = useContext(UserContext);
+  const { setUserData, socket } = useContext(UserContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
+
     getUser({ signal })
       .then((res) => {
-        if (res.data) {
-          setUserData(res.data);
+        const payload = res?.data?.data ?? res?.data;
+        if (payload) {
+          setUserData(payload);
         }
-        //connect socket
         socket.connect();
-
-        console.log(res.data);
       })
       .catch((err) => {
-        err.response.data && setUserData(null);
-        // err.response.data && setUserData(err.response.data);
-        navigate("/");
+        setUserData(null);
+        console.error(err);
+
+        if (err?.response?.status === 401 || err?.response?.status === 403) {
+          navigate("/", { replace: true });
+        }
       });
 
     return () => {
       controller.abort();
     };
-  }, []);
+  }, [navigate, setUserData, socket]);
 
   const navIconsArr = [
     { logoIcon: IoChatbubblesOutline, to: "#", selected: true },
   ];
   return (
     <div className="w-full max-w-450 h-dvh rounded-4xl border border-(--border)! mx-auto flex overflow-hidden">
-      <HomeNav navIconsArr={navIconsArr} />
+      {/* <HomeNav navIconsArr={navIconsArr} /> */}
       {/* left side */}
       <LeftSideHome />
 

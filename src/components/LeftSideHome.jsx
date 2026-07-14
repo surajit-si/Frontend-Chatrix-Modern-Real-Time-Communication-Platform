@@ -57,9 +57,10 @@ function LeftSideHome() {
       groupNameInput.current.value = null;
       try {
         const response = await getUser();
-        setUserData(response.data);
+        const payload = response?.data?.data ?? response?.data;
+        setUserData(payload);
       } catch (error) {
-        null;
+        setUserData(null);
       }
       setIsCreating(false);
     } catch (err) {
@@ -94,7 +95,7 @@ function LeftSideHome() {
   //========================TEST================================
   useEffect(() => {
     console.log(conversationMessages);
-    console.log(userData?.data.profile._id); //dummy
+    console.log(userData?.profile?._id); //dummy
   }, [conversationMessages]);
   //========================TEST================================
 
@@ -190,7 +191,7 @@ function LeftSideHome() {
 
       {/* List Contacts */}
       <ul className="p-1 ">
-        {userData?.data?.conversations.map((conversation) => {
+        {userData?.conversations?.map((conversation) => {
           return (
             <li
               className="flex cursor-pointer text-(--text) items-center py-2 relative border-b border-(--border) "

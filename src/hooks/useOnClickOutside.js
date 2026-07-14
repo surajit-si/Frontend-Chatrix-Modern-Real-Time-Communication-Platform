@@ -17,13 +17,13 @@ export default function useOnClickOutside(
       const el = ref?.current;
       if (!el) return;
 
-      // If click is inside the main element, do nothing
-      if (el.contains(event.target)) return;
+      const path = event.composedPath?.() ?? [];
 
-      // If click is inside any of the ignored refs, do nothing
+      if (path.includes(el)) return;
+
       for (const ignoreRef of ignoreRefs) {
         const ignoreEl = ignoreRef?.current;
-        if (ignoreEl && ignoreEl.contains(event.target)) return;
+        if (ignoreEl && path.includes(ignoreEl)) return;
       }
 
       handler(event);
@@ -31,10 +31,12 @@ export default function useOnClickOutside(
 
     document.addEventListener("mousedown", listener);
     document.addEventListener("touchstart", listener);
+    document.addEventListener("pointerdown", listener);
 
     return () => {
       document.removeEventListener("mousedown", listener);
       document.removeEventListener("touchstart", listener);
+      document.removeEventListener("pointerdown", listener);
     };
   }, [ref, handler, enabled, ...ignoreRefs]);
 }

@@ -4,11 +4,14 @@ import { logIn } from "../services/user.services";
 
 function SignIn() {
   const [isError, setIsError] = useState(false);
+  const [isLoging, setIsLoging] = useState(false);
   const alartComp = useRef();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsError(false);
+    setIsLoging(true);
     const formData = new FormData(e.target);
 
     const usernameOrEmail = formData.get("usernameOrEmail").trim();
@@ -22,13 +25,14 @@ function SignIn() {
     postFormData.append("password", password);
     try {
       const response = await logIn(postFormData);
-      console.log(response.data.data.updatedUser.isVerified);
       //redirect to destination
       response.data.data.updatedUser.isVerified
         ? navigate("/home")
         : navigate("/varify-email");
     } catch (error) {
-      console.log(error.response.data);
+      alartComp.current.textContent = error.response.data.message;
+      setIsError(true);
+      setIsLoging(false);
     }
   };
 
@@ -76,12 +80,26 @@ function SignIn() {
           name="password"
         />
         {/* Submit */}
-        <button
-          className="btn btn-primary mx-4 max-w-80 w-full text-(--text) "
-          type="submit"
-        >
-          Submit
-        </button>
+        {isLoging ? (
+          <button
+            class="btn btn-primary mx-4 max-w-80 w-full text-(--text)"
+            type="button"
+            disabled
+          >
+            <span
+              class="spinner-border spinner-border-sm"
+              aria-hidden="true"
+            ></span>
+            <span role="status">Loging...</span>
+          </button>
+        ) : (
+          <button
+            className="btn btn-primary mx-4 max-w-80 w-full text-(--text) "
+            type="submit"
+          >
+            Submit
+          </button>
+        )}
       </form>
     </>
   );
