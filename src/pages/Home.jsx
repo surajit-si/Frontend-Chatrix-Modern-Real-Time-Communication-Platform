@@ -24,6 +24,7 @@ function Home() {
         const payload = res?.data?.data ?? res?.data;
         if (payload) {
           setUserData(payload);
+          
         }
         socket.connect();
       })
@@ -44,6 +45,12 @@ function Home() {
   const navIconsArr = [
     { logoIcon: IoChatbubblesOutline, to: "#", selected: true },
   ];
+
+  //lission to back
+  window.addEventListener("popstate", () => {
+    console.log("Back button pressed");
+  });
+
   return (
     <div className="w-full max-w-450 h-dvh rounded-4xl border border-(--border)! mx-auto flex overflow-hidden">
       {/* <HomeNav navIconsArr={navIconsArr} /> */}

@@ -14,6 +14,9 @@ import {
 import { UserContext } from "../store/userData.store";
 import { selectedGroupContext } from "../store/currentGroup.store";
 
+//Added History for small screen devices back function
+window.history.pushState({}, "");
+
 function LeftSideHome() {
   const [preview, setPreview] = useState(null);
   const [isCreating, setIsCreating] = useState(false);

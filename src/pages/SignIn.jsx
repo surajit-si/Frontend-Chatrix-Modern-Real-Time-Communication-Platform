@@ -14,13 +14,17 @@ function SignIn() {
     setIsLoging(true);
     const formData = new FormData(e.target);
 
-    const usernameOrEmail = formData.get("usernameOrEmail").trim();
-    const password = formData.get("password").trim();
+    const usernameOrEmail = formData.get("usernameOrEmail")?.toString().trim();
+    const password = formData.get("password")?.toString().trim();
 
     const postFormData = new FormData();
-    usernameOrEmail.includes("@gmail.com")
-      ? postFormData.append("email", usernameOrEmail)
-      : postFormData.append("username", usernameOrEmail);
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(usernameOrEmail || "");
+
+    if (isEmail) {
+      postFormData.append("email", usernameOrEmail);
+    } else {
+      postFormData.append("username", usernameOrEmail);
+    }
 
     postFormData.append("password", password);
     try {
@@ -47,7 +51,7 @@ function SignIn() {
         </span>
       </nav>
       <form
-        className="p-2 pb-3 border border-(--border)! rounded-2xl min-h-40 mx-auto mt-10 flex flex-col items-center gap-2 shrink max-w-100"
+        className="p-2 pb-3 border border-(--border)! rounded-2xl mx-auto min-h-40 mt-10 flex flex-col items-center gap-2 shrink max-w-100 max-[25rem]:mx-2! "
         onSubmit={(e) => {
           handleSubmit(e);
         }}
@@ -66,7 +70,7 @@ function SignIn() {
         {/* Username / Email */}
         <input
           type="text"
-          className="form-control mx-4 max-w-80"
+          className="form-control mx-4 max-sm:mx-2 max-w-80"
           placeholder="Username/Email"
           aria-label="Username/Email"
           name="usernameOrEmail"

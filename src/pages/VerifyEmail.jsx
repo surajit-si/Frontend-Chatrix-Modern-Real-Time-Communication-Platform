@@ -14,6 +14,7 @@ function VerifyEmail() {
       await sendOTP();
     } catch (error) {
       console.log(error);
+      
     }
   }
 
@@ -41,10 +42,10 @@ function VerifyEmail() {
       const response = await verifyOtp(postFormData);
       navigate("/");
     } catch (error) {
-      console.log(error.response.data);
+      console.log(error.response.data)
       alartComp.current.textContent = error.response.data.message.err;
       setIsError(true);
-      return;
+      return
     }
     //remove err msg
     setIsError(false);
