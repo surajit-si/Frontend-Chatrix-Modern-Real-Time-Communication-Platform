@@ -17,7 +17,7 @@ import { selectedGroupContext } from "../store/currentGroup.store";
 //Added History for small screen devices back function
 window.history.pushState({}, "");
 
-function LeftSideHome() {
+function LeftSideHome({ className, setOnChat }) {
   const [preview, setPreview] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
   const createGroupContainer = useRef();
@@ -76,6 +76,8 @@ function LeftSideHome() {
     try {
       //change Selected group
       setSelectedGroup(conversation);
+      //set onChat?
+      setOnChat(true);
 
       //get messages
       const postMessages = new FormData();
@@ -116,7 +118,9 @@ function LeftSideHome() {
   );
 
   return (
-    <div className="h-full w-full max-w-1/3 border-r border-r-double border-(--border) max-lg:max-w-1/2 ">
+    <div
+      className={`${className} h-full w-full max-w-1/3 max-sm:max-w-full border-r border-r-double border-(--border) max-lg:max-w-1/2 bg-(--bg) `}
+    >
       <nav className="flex justify-between mt-2 px-4 border-b ">
         {/* AppName */}
         <Link

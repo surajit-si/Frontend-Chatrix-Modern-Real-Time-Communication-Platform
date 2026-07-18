@@ -11,7 +11,7 @@ import { UserContext } from "../store/userData.store";
 import { addMember, getUser } from "../services/user.services";
 import useOnClickOutside from "../hooks/useOnClickOutside";
 
-function RightSideHome() {
+function RightSideHome({ className }) {
   //open menu if user clicks
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const conversationMenu = useRef();
@@ -108,7 +108,8 @@ function RightSideHome() {
   useEffect(() => {
     if (messageContainer?.current) {
       requestAnimationFrame(() => {
-        messageContainer.current.scrollTop = messageContainer.current.scrollHeight;
+        messageContainer.current.scrollTop =
+          messageContainer.current.scrollHeight;
       });
     }
   }, [selectedGroup, conversationMessages[selectedGroup?._id]]);
@@ -162,7 +163,9 @@ function RightSideHome() {
   }, [socket]);
 
   return (
-    <div className="w-full max-w-2/3 max-lg:max-w-1/2 ">
+    <div
+      className={`${className} w-full sm:max-w-2/3 max-sm:max-w-full max-lg:max-w-1/2 bg-(--bg)`}
+    >
       {selectedGroup === null ? (
         <div className="h-full w-full flex justify-center items-center">
           {/* //Base Right Side */}
@@ -177,7 +180,7 @@ function RightSideHome() {
           </div>
         </div>
       ) : (
-        <div className="h-full w-full relative">
+        <div className="h-dvh w-full relative">
           <nav className="rightNavBar w-full h-14 border-b border-(--border) top-0 sticky flex justify-between items-center z-50 bg-(--bg) ">
             {/* profile , name , status */}
             <div className="h-full px-4 w-fit flex items-center">
@@ -261,7 +264,7 @@ function RightSideHome() {
             </div>
           </nav>
           <div
-            className="rightBody h-full w-full overflow-x-scroll flex flex-col box-border pb-32"
+            className="rightBody h-full w-full min-h-full overflow-y-scroll flex flex-col box-border pb-32 "
             ref={messageContainer}
           >
             {/* input Box */}
