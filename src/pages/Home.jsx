@@ -5,10 +5,11 @@ import { IoChatbubblesOutline } from "react-icons/io5";
 import HomeNav from "../components/HomeNav.jsx";
 import LeftSideHome from "../components/LeftSideHome.jsx";
 import RightSideHome from "../components/RightSideHome.jsx";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { getUser } from "../services/user.services.js";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../store/userData.store.jsx";
+import useOnClickElement from "../hooks/useOnClickElement.js";
 
 function Home() {
   //get user
@@ -54,17 +55,30 @@ function Home() {
   //true == current tab is left
   const [onChat, setOnChat] = useState(false);
 
+  //left ref
+  const leftRef = useRef();
+  useOnClickElement(leftRef, () => {
+    setOnChat(false);
+  });
+
+  //left ref
+  const rightRef = useRef();
+  useOnClickElement(rightRef, () => {
+    setOnChat(true);
+  });
+
   return (
     <div className="w-full max-w-450 h-dvh rounded-4xl border border-(--border)! mx-auto sm:flex overflow-hidden max-sm:relative">
       {/* <HomeNav navIconsArr={navIconsArr} /> */}
       {/* left side */}
       <LeftSideHome
+        ref={leftRef}
         setOnChat={setOnChat}
         className={`${onChat ? `z-0` : `z-50`} max-sm:absolute`}
       />
 
       {/* right side */}
-      <RightSideHome className={`z-10 max-sm:absolute`} />
+      <RightSideHome ref={rightRef} className={`z-10 max-sm:absolute`} />
     </div>
   );
 }

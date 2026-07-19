@@ -38,6 +38,14 @@ const getMessages = (data) => {
   return apiClient.post(`/users/get-messages`, data);
 };
 
+const deleteGroup = (data) => {
+  return apiClient.post("/users/delete-conversation", data);
+};
+
+const leaveGroup = (data) => {
+  return apiClient.post("/users/leave-conversation", data);
+};
+
 export {
   getUser,
   createAccount,
@@ -47,5 +55,7 @@ export {
   sendOTP,
   createConversation,
   addMember,
-  getMessages
+  getMessages,
+  deleteGroup,
+  leaveGroup,
 };

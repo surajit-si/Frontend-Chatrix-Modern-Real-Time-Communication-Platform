@@ -5,9 +5,9 @@ import { useEffect } from "react";
  * @param {Element} el - Element that on click want to perform a specific event
  * @param {Function} handler - Function that want to perform on the click, get event obj in callback by default
  */
-export default function useOnClickElement(el, handler) {
+export default function useOnClickElement(ref, handler) {
   useEffect(() => {
-    const element = el.current;
+    const element = ref.current;
     const listener = (event) => {
       //event
       if (!element && !handler) {
@@ -27,5 +27,5 @@ export default function useOnClickElement(el, handler) {
       element.removeEventListener("touchstart", listener);
       element.removeEventListener("pointerdown", listener);
     };
-  }, [el, handler]);
+  }, [ref, handler]);
 }

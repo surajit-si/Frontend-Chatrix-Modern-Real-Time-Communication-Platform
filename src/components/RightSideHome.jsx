@@ -8,10 +8,17 @@ import MessageContainerByMe from "./MessageContainerByMe";
 import MessageContainerByOthers from "./MessageContainerByOthers";
 import { selectedGroupContext } from "../store/currentGroup.store";
 import { UserContext } from "../store/userData.store";
-import { addMember, getUser } from "../services/user.services";
+import {
+  addMember,
+  deleteGroup,
+  getUser,
+  leaveGroup,
+} from "../services/user.services";
 import useOnClickOutside from "../hooks/useOnClickOutside";
+import MenuButton from "./MenuButton";
+import ButtonListWrapper from "./ButtonListWrapper";
 
-function RightSideHome({ className }) {
+function RightSideHome({ className, ref }) {
   //open menu if user clicks
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const conversationMenu = useRef();
@@ -162,8 +169,38 @@ function RightSideHome({ className }) {
     };
   }, [socket]);
 
+  const deleteGroupAsAdmin = () => {
+    deleteGroup({ conversationId: selectedGroup._id });
+  };
+
+  //leave group show logic
+  const [canLeave, setCanLeave] = useState(true);
+  useEffect(() => {
+    if (
+      selectedGroup?.admins.some((admin) => {
+        return admin._id == userData.profile._id;
+      }) &&
+      selectedGroup?.admins.length === 1
+    ) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setCanLeave(false);
+    } else {
+      setCanLeave(true);
+    }
+  }, [selectedGroup]);
+
+  const leaveSelectedGroup = () => {
+    leaveGroup({ conversationId: selectedGroup._id });
+  };
+
+  //=============================================
+  console.log(selectedGroup);
+  // console.log(userData.profile);
+  //=============================================
+
   return (
     <div
+      ref={ref}
       className={`${className} w-full sm:max-w-2/3 max-sm:max-w-full max-lg:max-w-1/2 bg-(--bg)`}
     >
       {selectedGroup === null ? (
@@ -224,16 +261,37 @@ function RightSideHome({ className }) {
                     className="conversationMenu absolute border border-(--border)! px-3 py-2 right-0 rounded-md bg-(--bg) "
                     ref={conversationMenu}
                   >
-                    <li className="conversationOption shrink-0 p-1">
-                      <span
-                        className="text-center whitespace-nowrap cursor-pointer text-(--text) "
-                        onClick={() => {
+                    <ButtonListWrapper className={""}>
+                      <MenuButton
+                        className={""}
+                        btnName={"Add a member"}
+                        handler={() => {
                           setIsAddingNewMember(true);
                         }}
-                      >
-                        Add a member
-                      </span>
-                    </li>
+                      />
+                    </ButtonListWrapper>
+
+                    {selectedGroup.admins.some((admin) => {
+                      return admin._id == userData.profile._id;
+                    }) && (
+                      <ButtonListWrapper className={""}>
+                        <MenuButton
+                          className={"text-[#dc3545]!"}
+                          btnName={"Delete group"}
+                          handler={deleteGroupAsAdmin}
+                        />
+                      </ButtonListWrapper>
+                    )}
+
+                    {canLeave && (
+                      <ButtonListWrapper className={""}>
+                        <MenuButton
+                          className={"text-[#dc3545]!"}
+                          btnName={"Leave Group"}
+                          handler={leaveSelectedGroup}
+                        />
+                      </ButtonListWrapper>
+                    )}
                   </ul>
                 )}
                 {isAddingNewMember && (
