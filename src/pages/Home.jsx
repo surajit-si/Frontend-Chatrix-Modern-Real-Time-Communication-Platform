@@ -46,11 +46,6 @@ function Home() {
     { logoIcon: IoChatbubblesOutline, to: "#", selected: true },
   ];
 
-  //lission to back
-  window.addEventListener("popstate", () => {
-    console.log("Back button pressed");
-  });
-
   //change z index
   //true == current tab is left
   const [onChat, setOnChat] = useState(false);
@@ -66,6 +61,25 @@ function Home() {
   useOnClickElement(rightRef, () => {
     setOnChat(true);
   });
+
+  //back button for small screen devices only
+  useEffect(() => {
+    const isSmallScreen = window.matchMedia("(max-width: 640px)").matches;
+
+    if (!isSmallScreen) {
+      return;
+    }
+
+    const handleBackButton = () => {
+      setOnChat(false);
+    };
+
+    window.addEventListener("popstate", handleBackButton);
+
+    return () => {
+      window.removeEventListener("popstate", handleBackButton);
+    };
+  }, []);
 
   return (
     <div className="w-full max-w-450 h-dvh rounded-4xl border border-(--border)! mx-auto sm:flex overflow-hidden max-sm:relative">

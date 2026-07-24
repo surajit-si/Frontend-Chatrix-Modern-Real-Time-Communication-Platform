@@ -14,9 +14,6 @@ import {
 import { UserContext } from "../store/userData.store";
 import { selectedGroupContext } from "../store/currentGroup.store";
 
-//Added History for small screen devices back function
-window.history.pushState({}, "");
-
 function LeftSideHome({ className, setOnChat, ref }) {
   const [preview, setPreview] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -78,6 +75,12 @@ function LeftSideHome({ className, setOnChat, ref }) {
       setSelectedGroup(conversation);
       //set onChat?
       setOnChat(true);
+
+      
+      //history for mobile back button act as back to list
+      if (window.matchMedia("(max-width: 640px)").matches) {
+        window.history.pushState({ screen: "chat" }, "", window.location.href);
+      }
 
       //get messages
       const postMessages = new FormData();
