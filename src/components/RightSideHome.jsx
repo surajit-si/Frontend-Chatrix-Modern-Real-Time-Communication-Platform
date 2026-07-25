@@ -73,7 +73,7 @@ function RightSideHome({ className, ref }) {
   const userProfile = userData?.profile;
 
   //set the typing text according to ws responces.
-  const [typing, setTyping] = useState("Panther is typing...");
+  const [typing, setTyping] = useState("");
 
   //send message when type enter or click the submit button
   const sendMessage = (e) => {
@@ -194,8 +194,8 @@ function RightSideHome({ className, ref }) {
   };
 
   //=============================================
+  console.log("selectedGroup:");
   console.log(selectedGroup);
-  // console.log(userData.profile);
   //=============================================
 
   return (

@@ -76,7 +76,6 @@ function LeftSideHome({ className, setOnChat, ref }) {
       //set onChat?
       setOnChat(true);
 
-      
       //history for mobile back button act as back to list
       if (window.matchMedia("(max-width: 640px)").matches) {
         window.history.pushState({ screen: "chat" }, "", window.location.href);
@@ -100,13 +99,6 @@ function LeftSideHome({ className, setOnChat, ref }) {
     }
   };
 
-  //========================TEST================================
-  useEffect(() => {
-    console.log(conversationMessages);
-    console.log(userData?.profile?._id); //dummy
-  }, [conversationMessages]);
-  //========================TEST================================
-
   //handle create group button
   function createGroupBtnHandler() {
     isCreating ? setIsCreating(false) : setIsCreating(true);
@@ -119,6 +111,26 @@ function LeftSideHome({ className, setOnChat, ref }) {
     isCreating,
     [createGroupButton],
   );
+
+  //get last messages
+  const getLastMessage = (conversation) => {
+    if (conversation?.lastMessage?.content.length <= 12) {
+      return conversation?.lastMessage?.content;
+    } else if (conversation?.lastMessage?.content.length > 12) {
+      const lastText = conversation?.lastMessage?.content;
+      return lastText.replace(/^(.{12}).+/, "$1...");
+    }
+  };
+  //get sender text for last message
+
+  const getLastMessageSender = (conversation) => {
+    if (conversation.lastMessage.sender._id === userData?.profile?._id) {
+      return "You:";
+    } else if (conversation.lastMessage.sender._id !== userData?.profile?._id) {
+      //Temp: Enter username
+      return `${conversation.lastMessage?.sender.username}:`;
+    }
+  };
 
   return (
     <div
@@ -222,8 +234,8 @@ function LeftSideHome({ className, setOnChat, ref }) {
                 <p className="">{conversation.groupName}</p>
                 {/* Last Message */}
                 <span className="text-(--text-muted) text-[0.8rem] ">
-                  <span className="">You:</span>
-                  <span className="">Hello</span>
+                  <span className="">{getLastMessageSender(conversation)}</span>
+                  <span className="ml-1">{getLastMessage(conversation)}</span>
                 </span>
               </span>
 
