@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 //socket
 import { io } from "socket.io-client";
-import { DEFAULT_URL } from "../constants";
+const DEFAULT_URL = import.meta.env.VITE_API_URL;
 const SOCKET_URL = DEFAULT_URL.replace(/\/api\/v1\/?$/, "");
 const socket = io(SOCKET_URL, {
   withCredentials: true,

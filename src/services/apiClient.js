@@ -1,5 +1,6 @@
 import axios from "axios";
-import { DEFAULT_URL } from "../constants";
+
+const DEFAULT_URL = import.meta.env.VITE_API_URL;
 
 //config
 const apiClient = axios.create({
