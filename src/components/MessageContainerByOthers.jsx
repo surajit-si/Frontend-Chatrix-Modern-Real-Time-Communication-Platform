@@ -3,7 +3,7 @@ function MessageContainerByOthers({ message, time }) {
 
   return (
     <span
-      className={`sendByMe self-start max-w-4/10 min-w-30 text-(--text) float-end px-2 py-1 bg-(--bg-light) border border-(--border)! rounded-lg mx-2 my-2 relative pb-3 `}
+      className={`sendByMe self-start max-w-4/10 min-w-30 text-(--text) float-end px-2 py-1 bg-(--bg-light) border border-(--border)! rounded-lg mx-2 my-2 relative pb-3 select-text!`}
     >
       <div
         className={`text-[0.7rem] tracking-wider font-semibold text-[${message.sender.textColor}]`}

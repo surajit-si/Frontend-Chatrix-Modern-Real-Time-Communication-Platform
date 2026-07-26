@@ -82,7 +82,7 @@ function Home() {
   }, []);
 
   return (
-    <div className="w-full max-w-450 h-dvh rounded-4xl border border-(--border)! mx-auto sm:flex overflow-hidden max-sm:relative">
+    <div className="w-full max-w-450 h-dvh rounded-4xl border border-(--border)! mx-auto sm:flex overflow-hidden max-sm:relative select-none">
       {/* <HomeNav navIconsArr={navIconsArr} /> */}
       {/* left side */}
       <LeftSideHome
