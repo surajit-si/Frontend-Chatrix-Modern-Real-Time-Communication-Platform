@@ -51,10 +51,10 @@ function RightSideHome({ className, ref }) {
     postFormData.append("usernameOrEmail", usernameOrEmail);
     postFormData.append("conversationId", selectedGroup?._id);
 
-    // console.log(postFormData);
     try {
       const response = await addMember(postFormData);
-      console.log(response.data);
+      setIsAddingNewMember(false);
+      setIsMenuOpen(false);
     } catch (error) {
       console.log(error.response?.data);
     }
@@ -364,10 +364,7 @@ function RightSideHome({ className, ref }) {
                   hour12: true, // Forces AM/PM clock instead of 24-hour clock
                 });
                 return (
-                  <MessageContainerByOthers
-                    message={message}
-                    time={msgTime}
-                  />
+                  <MessageContainerByOthers message={message} time={msgTime} />
                 );
               }
             })}

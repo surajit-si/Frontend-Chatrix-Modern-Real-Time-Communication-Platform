@@ -113,42 +113,45 @@ function LeftSideHome({ className, setOnChat, ref }) {
 
   //get last messages
   const getLastMessage = (conversation) => {
-    if (!conversationMessages[conversation._id]) {
-      if (conversation?.lastMessage?.content.length <= 12) {
-        return conversation?.lastMessage?.content;
-      } else if (conversation?.lastMessage?.content.length > 12) {
-        const lastText = conversation?.lastMessage?.content;
-        return lastText.replace(/^(.{12}).+/, "$1...");
-      }
-    } else {
-      const content = conversationMessages[conversation._id].at(-1).content;
-
-      if (content.length <= 12) {
-        return content;
+    if (conversation.lastMessage) {
+      if (!conversationMessages[conversation._id]) {
+        if (conversation?.lastMessage?.content.length <= 12) {
+          return conversation?.lastMessage?.content;
+        } else if (conversation?.lastMessage?.content.length > 12) {
+          const lastText = conversation?.lastMessage?.content;
+          return lastText.replace(/^(.{12}).+/, "$1...");
+        }
       } else {
-        return content.replace(/^(.{12}).+/, "$1...");
+        const content = conversationMessages[conversation._id].at(-1).content;
+
+        if (content.length <= 12) {
+          return content;
+        } else {
+          return content.replace(/^(.{12}).+/, "$1...");
+        }
       }
     }
   };
 
   //get sender text for last message
   const getLastMessageSender = (conversation) => {
-    console.log(conversationMessages[conversation._id]?.at(-1));
-
-    if (!conversationMessages[conversation._id]) {
-      if (conversation.lastMessage.sender._id === userData?.profile?._id) {
-        return "You:";
-      } else if (
-        conversation.lastMessage.sender._id !== userData?.profile?._id
-      ) {
-        return `${conversation.lastMessage?.sender.username}:`;
-      }
-    } else {
-      const lastRecevedMessage = conversationMessages[conversation._id].at(-1);
-      if (lastRecevedMessage.sender._id === userData?.profile._id) {
-        return "You:";
-      } else if (lastRecevedMessage.sender._id !== userData?.profile._id) {
-        return `${lastRecevedMessage.sender.username}:`;
+    if (conversation.lastMessage) {
+      if (!conversationMessages[conversation._id]) {
+        if (conversation.lastMessage.sender._id === userData?.profile?._id) {
+          return "You:";
+        } else if (
+          conversation.lastMessage.sender._id !== userData?.profile?._id
+        ) {
+          return `${conversation.lastMessage?.sender.username}:`;
+        }
+      } else {
+        const lastRecevedMessage =
+          conversationMessages[conversation._id].at(-1);
+        if (lastRecevedMessage.sender._id === userData?.profile._id) {
+          return "You:";
+        } else if (lastRecevedMessage.sender._id !== userData?.profile._id) {
+          return `${lastRecevedMessage.sender.username}:`;
+        }
       }
     }
   };
