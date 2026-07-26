@@ -87,7 +87,6 @@ function LeftSideHome({ className, setOnChat, ref }) {
       postMessages.append("conversationId", conversationId);
 
       const response = await getMessages(postMessages);
-      console.log(response.data.data.messages);
       //set the rendered messages to a common obj
       setConversationMessages((prev) => ({
         ...prev,
@@ -114,21 +113,43 @@ function LeftSideHome({ className, setOnChat, ref }) {
 
   //get last messages
   const getLastMessage = (conversation) => {
-    if (conversation?.lastMessage?.content.length <= 12) {
-      return conversation?.lastMessage?.content;
-    } else if (conversation?.lastMessage?.content.length > 12) {
-      const lastText = conversation?.lastMessage?.content;
-      return lastText.replace(/^(.{12}).+/, "$1...");
+    if (!conversationMessages[conversation._id]) {
+      if (conversation?.lastMessage?.content.length <= 12) {
+        return conversation?.lastMessage?.content;
+      } else if (conversation?.lastMessage?.content.length > 12) {
+        const lastText = conversation?.lastMessage?.content;
+        return lastText.replace(/^(.{12}).+/, "$1...");
+      }
+    } else {
+      const content = conversationMessages[conversation._id].at(-1).content;
+
+      if (content.length <= 12) {
+        return content;
+      } else {
+        return content.replace(/^(.{12}).+/, "$1...");
+      }
     }
   };
-  //get sender text for last message
 
+  //get sender text for last message
   const getLastMessageSender = (conversation) => {
-    if (conversation.lastMessage.sender._id === userData?.profile?._id) {
-      return "You:";
-    } else if (conversation.lastMessage.sender._id !== userData?.profile?._id) {
-      //Temp: Enter username
-      return `${conversation.lastMessage?.sender.username}:`;
+    console.log(conversationMessages[conversation._id]?.at(-1));
+
+    if (!conversationMessages[conversation._id]) {
+      if (conversation.lastMessage.sender._id === userData?.profile?._id) {
+        return "You:";
+      } else if (
+        conversation.lastMessage.sender._id !== userData?.profile?._id
+      ) {
+        return `${conversation.lastMessage?.sender.username}:`;
+      }
+    } else {
+      const lastRecevedMessage = conversationMessages[conversation._id].at(-1);
+      if (lastRecevedMessage.sender._id === userData?.profile._id) {
+        return "You:";
+      } else if (lastRecevedMessage.sender._id !== userData?.profile._id) {
+        return `${lastRecevedMessage.sender.username}:`;
+      }
     }
   };
 
@@ -234,7 +255,9 @@ function LeftSideHome({ className, setOnChat, ref }) {
                 <p className="">{conversation.groupName}</p>
                 {/* Last Message */}
                 <span className="text-(--text-muted) text-[0.8rem] ">
-                  <span className="">{getLastMessageSender(conversation)}</span>
+                  <span className="font-bold">
+                    {getLastMessageSender(conversation)}
+                  </span>
                   <span className="ml-1">{getLastMessage(conversation)}</span>
                 </span>
               </span>

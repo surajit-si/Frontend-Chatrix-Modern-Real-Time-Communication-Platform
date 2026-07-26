@@ -100,7 +100,6 @@ function RightSideHome({ className, ref }) {
       createdAt: Date.now(),
     };
 
-    console.log(newMessage); //test
     setConversationMessages((prev) => {
       const conversationId = selectedGroup._id;
       return {
@@ -192,11 +191,6 @@ function RightSideHome({ className, ref }) {
   const leaveSelectedGroup = () => {
     leaveGroup({ conversationId: selectedGroup._id });
   };
-
-  //=============================================
-  console.log("selectedGroup:");
-  console.log(selectedGroup);
-  //=============================================
 
   return (
     <div
