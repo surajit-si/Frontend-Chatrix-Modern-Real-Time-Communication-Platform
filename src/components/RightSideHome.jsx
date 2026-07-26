@@ -365,7 +365,7 @@ function RightSideHome({ className, ref }) {
                 });
                 return (
                   <MessageContainerByOthers
-                    messageText={message.content}
+                    message={message}
                     time={msgTime}
                   />
                 );
