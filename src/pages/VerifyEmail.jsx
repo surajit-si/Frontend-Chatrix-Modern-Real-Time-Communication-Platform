@@ -11,15 +11,25 @@ function VerifyEmail() {
   //first otp send
   async function sendEmail() {
     try {
-      await sendOTP();
+      const response = await sendOTP();
+      console.log(response.status);
+
+      if (response.status === 304) {
+        return sendEmail(); // send again
+      }
     } catch (error) {
       console.log(error);
-      
+      alartComp.current.textContent = "wait 30s and try again.";
+      setIsError(true);
     }
   }
 
+  const hasSent = useRef(false);
   useEffect(() => {
-    sendEmail();
+    if (!hasSent.current) {
+      sendEmail();
+      hasSent.current = true;
+    }
   }, []);
 
   //handle submit
@@ -42,10 +52,10 @@ function VerifyEmail() {
       const response = await verifyOtp(postFormData);
       navigate("/");
     } catch (error) {
-      console.log(error.response.data)
+      console.log(error.response.data);
       alartComp.current.textContent = error.response.data.message.err;
       setIsError(true);
-      return
+      return;
     }
     //remove err msg
     setIsError(false);
