@@ -262,7 +262,6 @@ function RightSideHome({ className, ref }) {
                         handler={() => {
                           setIsAddingNewMember(true);
                         }}
-                        type={"danger"}
                       />
                     </ButtonListWrapper>
 
@@ -302,6 +301,11 @@ function RightSideHome({ className, ref }) {
                         type="text"
                         name="usernameOrEmail"
                         placeholder="Enter Username/Email"
+                        autoComplete="off"
+                        autoCapitalize="off"
+                        autoFocus
+                        autoCorrect="off"
+                        spellCheck={false}
                         className="outline-0 border-(--border)! border rounded-sm pl-2 placeholder:text-(--text-muted) text-md! text-(--text) "
                       />
                       <button
@@ -324,6 +328,8 @@ function RightSideHome({ className, ref }) {
             <div className="absolute bottom-0 w-full px-2 mx-auto py-2 z-50">
               <form
                 className=" rounded-4xl bg-(--bg-light) w-full p-1 flex border border-(--border)! "
+                autoFocus
+                spellCheck={false}
                 onSubmit={sendMessage}
               >
                 {/* Atachment Button */}
@@ -334,6 +340,9 @@ function RightSideHome({ className, ref }) {
                   placeholder="Type a message..."
                   className="grow outline-0 text-(--text) "
                   name="messageText"
+                  autoCapitalize="off"
+                  autoComplete="off"
+                  autoCorrect="off"
                 />
 
                 <button type="submit" className="">

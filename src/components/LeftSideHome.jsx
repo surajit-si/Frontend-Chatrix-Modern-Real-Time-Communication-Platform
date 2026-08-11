@@ -237,6 +237,11 @@ function LeftSideHome({ className, setOnChat, ref }) {
                     placeholder="Enter group name:"
                     className="form-control bg-tra"
                     ref={groupNameInput}
+                    autoCapitalize="off"
+                    autoComplete="off"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    autoFocus
                     required
                   />
 
