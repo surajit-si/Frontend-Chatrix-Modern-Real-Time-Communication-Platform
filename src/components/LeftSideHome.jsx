@@ -19,7 +19,7 @@ import MenuButton from "./MenuButton";
 
 function LeftSideHome({ className, setOnChat, ref }) {
   const [preview, setPreview] = useState(null);
-  const [isCreating, setIsCreating] = useState(false);
+  const [isCreating, setIsCreating] = useState(true);
   const createGroupContainer = useRef();
   const createGroupButton = useRef();
   const groupNameInput = useRef();
@@ -198,7 +198,7 @@ function LeftSideHome({ className, setOnChat, ref }) {
             {isCreating && (
               <div
                 ref={createGroupContainer}
-                className="absolute bg-(--bg-light) z-50 p-2 rounded-2xl flex flex-col justify-center items-center w-80 "
+                className="absolute bg-(--bg-light) border! border-(--border) z-50 p-2 rounded-2xl flex flex-col justify-center items-center w-80 right-0"
               >
                 {/* Upload Image */}
                 <div className="aspect-square w-20 max-lg:w-12 border rounded-full border-(--border)! overflow-hidden">
