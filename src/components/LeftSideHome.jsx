@@ -10,9 +10,12 @@ import {
   createConversation,
   getMessages,
   getUser,
+  logout,
 } from "../services/user.services";
 import { UserContext } from "../store/userData.store";
 import { selectedGroupContext } from "../store/currentGroup.store";
+import ButtonListWrapper from "./ButtonListWrapper";
+import MenuButton from "./MenuButton";
 
 function LeftSideHome({ className, setOnChat, ref }) {
   const [preview, setPreview] = useState(null);
@@ -20,6 +23,9 @@ function LeftSideHome({ className, setOnChat, ref }) {
   const createGroupContainer = useRef();
   const createGroupButton = useRef();
   const groupNameInput = useRef();
+  const [isMenuOpen, setIsMenuOpen] = useState();
+  const menuRef = useRef();
+  const profileMenu = useRef();
 
   const {
     userData,
@@ -37,6 +43,11 @@ function LeftSideHome({ className, setOnChat, ref }) {
     const previewUrl = URL.createObjectURL(file);
     setPreview(previewUrl);
   };
+
+  //logout
+  function logoutUser() {
+    logout();
+  }
 
   //create Conversation
   const handleSubmit = async (event) => {
@@ -61,6 +72,7 @@ function LeftSideHome({ className, setOnChat, ref }) {
         setUserData(payload);
       } catch (error) {
         setUserData(null);
+        console.log(error);
       }
       setIsCreating(false);
     } catch (err) {
@@ -110,6 +122,10 @@ function LeftSideHome({ className, setOnChat, ref }) {
     isCreating,
     [createGroupButton],
   );
+  //Left side Menu Auto Close
+  useOnClickOutside(profileMenu, () => setIsMenuOpen(false), isMenuOpen, [
+    menuRef,
+  ]);
 
   //get last messages
   const getLastMessage = (conversation) => {
@@ -170,7 +186,7 @@ function LeftSideHome({ className, setOnChat, ref }) {
           Chatrix
         </Link>
         {/* icons */}
-        <span className="flex gap-3">
+        <span className="relative flex gap-3">
           {/* Add */}
           <span className="relative">
             <IoMdAddCircleOutline
@@ -232,7 +248,32 @@ function LeftSideHome({ className, setOnChat, ref }) {
             )}
           </span>
           {/* Menu Dots */}
-          <BsThreeDotsVertical className=" text-(--text) box-content! p-2 rounded-full hover:bg-(--bg-light) cursor-pointer text-2xl " />
+          <div
+            className={``}
+            ref={menuRef}
+            onClick={
+              isMenuOpen
+                ? () => setIsMenuOpen(false)
+                : () => setIsMenuOpen(true)
+            }
+          >
+            <BsThreeDotsVertical className=" text-(--text) box-content! p-2 rounded-full hover:bg-(--bg-light) cursor-pointer text-2xl " />
+          </div>
+          {isMenuOpen && (
+            <ul
+              className="conversationMenu absolute border border-(--border)! px-4 py-1 right-6 top-14 rounded-md bg-(--bg) z-1  "
+              ref={profileMenu}
+            >
+              <ButtonListWrapper className={""}>
+                <MenuButton
+                  className={""}
+                  btnName={"Logout . . ."}
+                  handler={logoutUser}
+                  type={"danger"}
+                />
+              </ButtonListWrapper>
+            </ul>
+          )}
         </span>
       </nav>
 

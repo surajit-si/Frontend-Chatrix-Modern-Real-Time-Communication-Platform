@@ -46,6 +46,10 @@ const leaveGroup = (data) => {
   return apiClient.post("/users/leave-conversation", data);
 };
 
+const logout = () => {
+  return apiClient.get("/users/logout");
+};
+
 export {
   getUser,
   createAccount,
@@ -58,4 +62,5 @@ export {
   getMessages,
   deleteGroup,
   leaveGroup,
+  logout,
 };

@@ -262,6 +262,7 @@ function RightSideHome({ className, ref }) {
                         handler={() => {
                           setIsAddingNewMember(true);
                         }}
+                        type={"danger"}
                       />
                     </ButtonListWrapper>
 

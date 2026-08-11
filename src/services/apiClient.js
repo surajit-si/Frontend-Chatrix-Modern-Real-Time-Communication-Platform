@@ -47,4 +47,28 @@ apiClient.interceptors.response.use(
   },
 );
 
+//Reload Logic
+apiClient.interceptors.response.use(
+  (response) => {
+    if (response.data.reload === true) {
+      window.navigation.reload();
+    } else {
+      return response;
+    }
+  },
+  (error) => Promise.reject(error),
+);
+
+//Navigation Logic
+apiClient.interceptors.response.use(
+  (response) => {
+    if (response.data.navigate === true) {
+      window.navigation.navigate(response.data.navigateTo.trim());
+    } else {
+      return response;
+    }
+  },
+  (error) => Promise.reject(error),
+);
+
 export default apiClient;

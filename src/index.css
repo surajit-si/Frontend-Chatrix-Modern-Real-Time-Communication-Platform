@@ -13,6 +13,7 @@
   --highlight: hsl(0, 0%, 60%);
   --primary: hsl(216, 90%, 44%);
   --secondary: hsl(216, 80%, 50%);
+  --danger: hsl(354, 70%, 54%);
 }
 
 ::-webkit-scrollbar {
