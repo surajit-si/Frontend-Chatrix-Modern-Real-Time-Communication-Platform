@@ -19,7 +19,7 @@ import MenuButton from "./MenuButton";
 
 function LeftSideHome({ className, setOnChat, ref }) {
   const [preview, setPreview] = useState(null);
-  const [isCreating, setIsCreating] = useState(true);
+  const [isCreating, setIsCreating] = useState(false);
   const createGroupContainer = useRef();
   const createGroupButton = useRef();
   const groupNameInput = useRef();
