@@ -10,6 +10,8 @@ import VerifyEmail from "./pages/VerifyEmail.jsx";
 import Home from "./pages/Home.jsx";
 import UserStore from "./store/userData.store.jsx";
 import SelectedGroup from "./store/currentGroup.store.jsx";
+import { Provider } from "react-redux";
+import store from "./store/index.js";
 
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
@@ -21,11 +23,13 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <SelectedGroup>
-      <UserStore>
-        <RouterProvider router={router} />
-      </UserStore>
-      <App />
-    </SelectedGroup>
+    <Provider store={store}>
+      <SelectedGroup>
+        <UserStore>
+          <RouterProvider router={router} />
+        </UserStore>
+        <App />
+      </SelectedGroup>
+    </Provider>
   </StrictMode>,
 );

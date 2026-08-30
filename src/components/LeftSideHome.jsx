@@ -16,6 +16,8 @@ import { UserContext } from "../store/userData.store";
 import { selectedGroupContext } from "../store/currentGroup.store";
 import ButtonListWrapper from "./ButtonListWrapper";
 import MenuButton from "./MenuButton";
+import { useDispatch, useSelector } from "react-redux";
+import { currGroupActions } from "../store/currentGroupSlice.js";
 
 function LeftSideHome({ className, setOnChat, ref }) {
   const [preview, setPreview] = useState(null);
@@ -33,8 +35,9 @@ function LeftSideHome({ className, setOnChat, ref }) {
     conversationMessages,
     setConversationMessages,
   } = useContext(UserContext);
-
-  const { selectedGroup, setSelectedGroup } = useContext(selectedGroupContext);
+  //redux-toolkit
+  const selectedGroup = useSelector((state) => state.currGroup);
+  const dispatch = useDispatch();
 
   const handleFileChange = (event) => {
     const file = event.target.files?.[0];
@@ -84,7 +87,7 @@ function LeftSideHome({ className, setOnChat, ref }) {
   const handleGroupClick = async (conversation) => {
     try {
       //change Selected group
-      setSelectedGroup(conversation);
+      dispatch(currGroupActions.setCurrGroup(conversation));
       //set onChat?
       setOnChat(true);
 
