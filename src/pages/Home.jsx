@@ -10,10 +10,14 @@ import { getUser } from "../services/user.services.js";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../store/userData.store.jsx";
 import useOnClickElement from "../hooks/useOnClickElement.js";
+import { useDispatch, useSelector } from "react-redux";
+import { userDataActions } from "../store/userDataSlice.js";
 
 function Home() {
   //get user
-  const { setUserData, socket } = useContext(UserContext);
+  const { socket } = useSelector((state) => state.userData);
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,12 +28,12 @@ function Home() {
       .then((res) => {
         const payload = res?.data?.data ?? res?.data;
         if (payload) {
-          setUserData(payload);
+          dispatch(userDataActions.setUserData(payload));
         }
         socket.connect();
       })
       .catch((err) => {
-        setUserData(null);
+        dispatch(userDataActions.setUserData(null));
         console.error(err);
 
         if (err?.response?.status === 401 || err?.response?.status === 403) {
@@ -40,7 +44,7 @@ function Home() {
     return () => {
       controller.abort();
     };
-  }, [navigate, setUserData, socket]);
+  }, [navigate, socket]);
 
   const navIconsArr = [
     { logoIcon: IoChatbubblesOutline, to: "#", selected: true },

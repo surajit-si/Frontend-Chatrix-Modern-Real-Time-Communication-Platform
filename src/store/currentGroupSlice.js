@@ -8,9 +8,10 @@ const currentGroupSlice = createSlice({
       if (action.payload) {
         return action.payload;
       }
+      return state;
     },
   },
 });
 
 export const currGroupActions = currentGroupSlice.actions;
-export default currentGroupSlice;
+export default currentGroupSlice.reducer;

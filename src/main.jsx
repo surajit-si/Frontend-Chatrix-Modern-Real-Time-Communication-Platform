@@ -8,8 +8,6 @@ import SignUp from "./pages/SignUp.jsx";
 import SignIn from "./pages/SignIn.jsx";
 import VerifyEmail from "./pages/VerifyEmail.jsx";
 import Home from "./pages/Home.jsx";
-import UserStore from "./store/userData.store.jsx";
-import SelectedGroup from "./store/currentGroup.store.jsx";
 import { Provider } from "react-redux";
 import store from "./store/index.js";
 
@@ -24,12 +22,8 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-      <SelectedGroup>
-        <UserStore>
-          <RouterProvider router={router} />
-        </UserStore>
-        <App />
-      </SelectedGroup>
+      <RouterProvider router={router} />
+      <App />
     </Provider>
   </StrictMode>,
 );

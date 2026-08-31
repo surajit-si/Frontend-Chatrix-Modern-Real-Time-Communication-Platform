@@ -6,17 +6,12 @@ import { IoAttachOutline } from "react-icons/io5";
 import { IoSendSharp } from "react-icons/io5";
 import MessageContainerByMe from "./MessageContainerByMe";
 import MessageContainerByOthers from "./MessageContainerByOthers";
-import { selectedGroupContext } from "../store/currentGroup.store";
-import { UserContext } from "../store/userData.store";
-import {
-  addMember,
-  deleteGroup,
-  getUser,
-  leaveGroup,
-} from "../services/user.services";
+import { addMember, deleteGroup, getUser, leaveGroup } from "../services/user.services";
 import useOnClickOutside from "../hooks/useOnClickOutside";
 import MenuButton from "./MenuButton";
 import ButtonListWrapper from "./ButtonListWrapper";
+import { useDispatch, useSelector } from "react-redux";
+import { userDataActions } from "../store/userDataSlice";
 
 function RightSideHome({ className, ref }) {
   //open menu if user clicks
@@ -37,8 +32,8 @@ function RightSideHome({ className, ref }) {
     [],
   );
 
-  //it tells which group is currently set
-  const { selectedGroup, setSelectedGroup } = useContext(selectedGroupContext);
+  //redux toolkit
+  const selectedGroup = useSelector((state) => state.currGroup);
 
   //addMember to conversation
   const addConversationMembers = async (e) => {
@@ -61,13 +56,18 @@ function RightSideHome({ className, ref }) {
   };
 
   //get userdata and socket
-  const {
+  const { userData, socket, conversationMessages } = useSelector(
+    (state) => state.userData,
+  );
+  const dispatch = useDispatch();
+
+  /* const {
     userData,
     setUserData,
     socket,
     conversationMessages,
     setConversationMessages,
-  } = useContext(UserContext);
+  } = useContext(UserContext); */
 
   //userData profile set
   const userProfile = userData?.profile;
@@ -100,13 +100,13 @@ function RightSideHome({ className, ref }) {
       createdAt: Date.now(),
     };
 
-    setConversationMessages((prev) => {
-      const conversationId = selectedGroup._id;
-      return {
-        ...prev,
-        [conversationId]: [...(prev[conversationId] || []), newMessage],
-      };
-    });
+    const conversationId = selectedGroup._id;
+    dispatch(
+      userDataActions.addNewMessages({
+        conversationId: conversationId,
+        newMessage: newMessage,
+      }),
+    );
   };
 
   //scroll message container to bottom
@@ -125,13 +125,21 @@ function RightSideHome({ className, ref }) {
 
     const handleIncomingMessage = (data) => {
       //set incoming messages to show in viwe-port
-      setConversationMessages((prev) => {
-        const conversationId = data.message.conversation._id;
+      /* setConversationMessages((prev) => {
+       
         return {
           ...prev,
           [conversationId]: [...(prev[conversationId] || []), data.message],
         };
-      });
+      }); */
+      const conversationId = data.message.conversation._id;
+      const newMessage = data.message;
+      dispatch(
+        userDataActions.addNewMessages({
+          conversationId: conversationId,
+          newMessage: newMessage,
+        }),
+      );
     };
 
     const handleConnectError = async (err) => {

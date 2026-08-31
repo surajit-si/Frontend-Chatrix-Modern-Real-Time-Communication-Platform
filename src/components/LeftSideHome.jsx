@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { IoCloudUploadOutline } from "react-icons/io5";
-import { useContext, useEffect, useRef, useState } from "react";
+import {  useRef, useState } from "react";
 import useOnClickOutside from "../hooks/useOnClickOutside";
 import {
   createConversation,
@@ -12,12 +12,11 @@ import {
   getUser,
   logout,
 } from "../services/user.services";
-import { UserContext } from "../store/userData.store";
-import { selectedGroupContext } from "../store/currentGroup.store";
 import ButtonListWrapper from "./ButtonListWrapper";
 import MenuButton from "./MenuButton";
 import { useDispatch, useSelector } from "react-redux";
 import { currGroupActions } from "../store/currentGroupSlice.js";
+import { userDataActions } from "../store/userDataSlice.js";
 
 function LeftSideHome({ className, setOnChat, ref }) {
   const [preview, setPreview] = useState(null);
@@ -29,12 +28,18 @@ function LeftSideHome({ className, setOnChat, ref }) {
   const menuRef = useRef();
   const profileMenu = useRef();
 
-  const {
+  /* const {
     userData,
     setUserData,
     conversationMessages,
     setConversationMessages,
-  } = useContext(UserContext);
+  } = useContext(UserContext); */
+
+  //redux-toolkit userData
+  const { userData, conversationMessages } = useSelector(
+    (state) => state.userData,
+  );
+
   //redux-toolkit
   const selectedGroup = useSelector((state) => state.currGroup);
   const dispatch = useDispatch();
@@ -72,9 +77,9 @@ function LeftSideHome({ className, setOnChat, ref }) {
       try {
         const response = await getUser();
         const payload = response?.data?.data ?? response?.data;
-        setUserData(payload);
+        dispatch(userDataActions.setUserData(payload));
       } catch (error) {
-        setUserData(null);
+        dispatch(userDataActions.setUserData(null));
         console.log(error);
       }
       setIsCreating(false);
@@ -103,10 +108,16 @@ function LeftSideHome({ className, setOnChat, ref }) {
 
       const response = await getMessages(postMessages);
       //set the rendered messages to a common obj
-      setConversationMessages((prev) => ({
+      /* setConversationMessages((prev) => ({
         ...prev,
         [conversation._id]: response.data.data.messages,
-      }));
+      })); */
+
+      dispatch(
+        userDataActions.setWithPrevConversationMessages({
+          [conversation._id]: response.data.data.messages,
+        }),
+      );
     } catch (error) {
       console.error(error);
       error && console.log(error?.response?.data);
