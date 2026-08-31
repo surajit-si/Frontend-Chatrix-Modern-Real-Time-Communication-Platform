@@ -10,6 +10,7 @@ import VerifyEmail from "./pages/VerifyEmail.jsx";
 import Home from "./pages/Home.jsx";
 import { Provider } from "react-redux";
 import store from "./store/index.js";
+import {SocketProvider} from "./context/socketContext.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage /> },
@@ -22,8 +23,10 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
-      <App />
+      <SocketProvider>
+        <RouterProvider router={router} />
+        <App />
+      </SocketProvider>
     </Provider>
   </StrictMode>,
 );

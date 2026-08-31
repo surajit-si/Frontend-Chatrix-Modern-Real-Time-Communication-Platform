@@ -12,10 +12,11 @@ import useOnClickElement from "../hooks/useOnClickElement.js";
 import { useDispatch, useSelector } from "react-redux";
 import { userDataActions } from "../store/userDataSlice.js";
 import devErrorLog from "../utils/devErrorLog.js";
+import { useSocket } from "../context/socketContext.jsx";
 
 function Home() {
-  //get user
-  const { socket } = useSelector((state) => state.userData);
+  //get socket
+  const socket = useSocket();
   const dispatch = useDispatch();
 
   const navigate = useNavigate();

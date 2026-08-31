@@ -18,6 +18,7 @@ import ButtonListWrapper from "./ButtonListWrapper";
 import { useDispatch, useSelector } from "react-redux";
 import { userDataActions } from "../store/userDataSlice";
 import devErrorLog from "../utils/devErrorLog.js";
+import { useSocket } from "../context/socketContext.jsx";
 
 function RightSideHome({ className, ref }) {
   //open menu if user clicks
@@ -64,10 +65,12 @@ function RightSideHome({ className, ref }) {
   };
 
   //get userdata and socket
-  const { userData, socket, conversationMessages } = useSelector(
+  const { userData, conversationMessages } = useSelector(
     (state) => state.userData,
   );
   const dispatch = useDispatch();
+
+  const socket = useSocket();
 
   /* const {
     userData,
