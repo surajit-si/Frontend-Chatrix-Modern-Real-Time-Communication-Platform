@@ -5,10 +5,13 @@ import { useNavigate } from "react-router-dom";
 
 //components
 import Navbar from "../components/Navbar.jsx";
-import { UserContext } from "../store/userData.store.jsx";
+import { useDispatch } from "react-redux";
+import { userDataActions } from "../store/userDataSlice.js";
+import devErrorLog from "../utils/devErrorLog.js";
 
 function LandingPage() {
-  const { setUserData } = useContext(UserContext);
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,7 +23,7 @@ function LandingPage() {
         const payload = res?.data?.data ?? res?.data;
         if (!payload) return;
 
-        setUserData(payload);
+        dispatch(userDataActions.setUserData(payload));
 
         if (payload?.profile?.isVerified === true) {
           navigate("/home", { replace: true });
@@ -29,14 +32,14 @@ function LandingPage() {
         }
       })
       .catch((err) => {
-        console.log(err);
-        setUserData(null);
+        devErrorLog(err);
+        dispatch(userDataActions.setUserData(null));
       });
 
     return () => {
       controller.abort();
     };
-  }, [navigate, setUserData]);
+  }, [navigate]);
 
   return (
     <div className="">

@@ -6,12 +6,18 @@ import { IoAttachOutline } from "react-icons/io5";
 import { IoSendSharp } from "react-icons/io5";
 import MessageContainerByMe from "./MessageContainerByMe";
 import MessageContainerByOthers from "./MessageContainerByOthers";
-import { addMember, deleteGroup, getUser, leaveGroup } from "../services/user.services";
+import {
+  addMember,
+  deleteGroup,
+  getUser,
+  leaveGroup,
+} from "../services/user.services";
 import useOnClickOutside from "../hooks/useOnClickOutside";
 import MenuButton from "./MenuButton";
 import ButtonListWrapper from "./ButtonListWrapper";
 import { useDispatch, useSelector } from "react-redux";
 import { userDataActions } from "../store/userDataSlice";
+import devErrorLog from "../utils/devErrorLog.js";
 
 function RightSideHome({ className, ref }) {
   //open menu if user clicks
@@ -51,7 +57,9 @@ function RightSideHome({ className, ref }) {
       setIsAddingNewMember(false);
       setIsMenuOpen(false);
     } catch (error) {
-      console.log(error.response?.data);
+      if (import.meta.env.VITE_NODE_ENV === "development") {
+        devErrorLog(error.response?.data);
+      }
     }
   };
 
@@ -148,20 +156,20 @@ function RightSideHome({ className, ref }) {
           await getUser();
           socket.connect();
         } catch (error) {
-          console.error(error);
+          devErrorLog(error);
         }
       }
     };
 
     const handleMessageError = (err) => {
       if (err.type === "parmission-error") {
-        console.log(err);
+        devErrorLog(err);
       } else if (err.type === "not-found") {
-        console.log(err);
+        devErrorLog(err);
       } else if (err.type === "db-error") {
-        console.log(err);
+        devErrorLog(err);
       } else if (err.type === "internal-server-error") {
-        console.log(err);
+        devErrorLog(err);
       }
     };
 

@@ -1,4 +1,5 @@
 import axios from "axios";
+import devErrorLog from "../utils/devErrorLog";
 
 const DEFAULT_URL = import.meta.env.VITE_API_URL;
 
@@ -37,7 +38,7 @@ apiClient.interceptors.response.use(
           return Promise.reject(error);
         }
       } catch (refreshError) {
-        console.error("refresh token expired, please login again.");
+        devErrorLog("refresh token expired, please login again.");
         return Promise.reject(refreshError);
       }
     }

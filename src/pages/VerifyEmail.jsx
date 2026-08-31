@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { resendOtp, sendOTP, verifyOtp } from "../services/user.services";
+import devErrorLog from "../utils/devErrorLog";
 
 function VerifyEmail() {
   const alartComp = useRef();
@@ -12,13 +13,13 @@ function VerifyEmail() {
   async function sendEmail() {
     try {
       const response = await sendOTP();
-      console.log(response.status);
+      devErrorLog(response.status);
 
       if (response.status === 304) {
         return sendEmail(); // send again
       }
     } catch (error) {
-      console.log(error);
+      devErrorLog(error);
       alartComp.current.textContent = "wait 30s and try again.";
       setIsError(true);
     }
@@ -37,7 +38,7 @@ function VerifyEmail() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const otp = formData.get("otp").trim();
-    console.log(otp);
+    devErrorLog(otp);
     // const otp = "";
     if (otp.length != 6) {
       alartComp.current.textContent = "OTP must be of 6 numbers";
@@ -52,7 +53,7 @@ function VerifyEmail() {
       const response = await verifyOtp(postFormData);
       navigate("/");
     } catch (error) {
-      console.log(error.response.data);
+      devErrorLog(error.response.data);
       alartComp.current.textContent = error.response.data.message.err;
       setIsError(true);
       return;
@@ -70,9 +71,9 @@ function VerifyEmail() {
     //==============Resend OTP==============
     try {
       const response = await resendOtp();
-      console.log(response.data);
+      devErrorLog(response.data);
     } catch (error) {
-      console.log(error.response.data);
+      devErrorLog(error.response.data);
     }
 
     let i = 30;

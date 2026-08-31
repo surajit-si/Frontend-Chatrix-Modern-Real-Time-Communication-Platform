@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { IoCloudUploadOutline } from "react-icons/io5";
-import {  useRef, useState } from "react";
+import { useRef, useState } from "react";
 import useOnClickOutside from "../hooks/useOnClickOutside";
 import {
   createConversation,
@@ -17,6 +17,7 @@ import MenuButton from "./MenuButton";
 import { useDispatch, useSelector } from "react-redux";
 import { currGroupActions } from "../store/currentGroupSlice.js";
 import { userDataActions } from "../store/userDataSlice.js";
+import devErrorLog from "../utils/devErrorLog.js";
 
 function LeftSideHome({ className, setOnChat, ref }) {
   const [preview, setPreview] = useState(null);
@@ -64,7 +65,6 @@ function LeftSideHome({ className, setOnChat, ref }) {
 
     const groupAvatar = formData.get("groupAvatar");
     const groupName = formData.get("groupName");
-    console.log({ groupAvatar, groupName });
 
     const postFormData = new FormData();
     postFormData.append("avatar", groupAvatar);
@@ -80,11 +80,15 @@ function LeftSideHome({ className, setOnChat, ref }) {
         dispatch(userDataActions.setUserData(payload));
       } catch (error) {
         dispatch(userDataActions.setUserData(null));
-        console.log(error);
+        if (import.meta.env.VITE_NODE_ENV === "development") {
+          devErrorLog(error);
+        }
       }
       setIsCreating(false);
     } catch (err) {
-      console.log(err?.response?.data);
+      if (import.meta.env.VITE_NODE_ENV === "development") {
+        devErrorLog(err?.response?.data);
+      }
     }
   };
 
@@ -119,8 +123,10 @@ function LeftSideHome({ className, setOnChat, ref }) {
         }),
       );
     } catch (error) {
-      console.error(error);
-      error && console.log(error?.response?.data);
+      if (error && import.meta.env.VITE_NODE_ENV === "development") {
+        devErrorLog(error);
+        devErrorLog(error?.response?.data);
+      }
     }
   };
 

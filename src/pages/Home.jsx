@@ -8,10 +8,10 @@ import RightSideHome from "../components/RightSideHome.jsx";
 import { useContext, useEffect, useRef, useState } from "react";
 import { getUser } from "../services/user.services.js";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../store/userData.store.jsx";
 import useOnClickElement from "../hooks/useOnClickElement.js";
 import { useDispatch, useSelector } from "react-redux";
 import { userDataActions } from "../store/userDataSlice.js";
+import devErrorLog from "../utils/devErrorLog.js";
 
 function Home() {
   //get user
@@ -34,7 +34,7 @@ function Home() {
       })
       .catch((err) => {
         dispatch(userDataActions.setUserData(null));
-        console.error(err);
+        devErrorLog(err);
 
         if (err?.response?.status === 401 || err?.response?.status === 403) {
           navigate("/", { replace: true });
