@@ -72,14 +72,6 @@ function RightSideHome({ className, ref }) {
 
   const socket = useSocket();
 
-  /* const {
-    userData,
-    setUserData,
-    socket,
-    conversationMessages,
-    setConversationMessages,
-  } = useContext(UserContext); */
-
   //userData profile set
   const userProfile = userData?.profile;
 
@@ -136,13 +128,6 @@ function RightSideHome({ className, ref }) {
 
     const handleIncomingMessage = (data) => {
       //set incoming messages to show in viwe-port
-      /* setConversationMessages((prev) => {
-       
-        return {
-          ...prev,
-          [conversationId]: [...(prev[conversationId] || []), data.message],
-        };
-      }); */
       const conversationId = data.message.conversation._id;
       const newMessage = data.message;
       dispatch(
@@ -381,6 +366,7 @@ function RightSideHome({ className, ref }) {
                 });
                 return (
                   <MessageContainerByMe
+                    key={message._id}
                     messageText={message.content}
                     time={msgTime}
                   />
@@ -393,7 +379,11 @@ function RightSideHome({ className, ref }) {
                   hour12: true, // Forces AM/PM clock instead of 24-hour clock
                 });
                 return (
-                  <MessageContainerByOthers message={message} time={msgTime} />
+                  <MessageContainerByOthers
+                    key={message._id}
+                    message={message}
+                    time={msgTime}
+                  />
                 );
               }
             })}

@@ -307,6 +307,7 @@ function LeftSideHome({ className, setOnChat, ref }) {
         {userData?.conversations?.map((conversation) => {
           return (
             <li
+              key={conversation._id}
               className="flex cursor-pointer text-(--text) items-center py-2 relative border-b border-(--border) "
               onClick={() => handleGroupClick(conversation)}
             >
