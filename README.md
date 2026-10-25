@@ -129,7 +129,7 @@ Whether you're building team collaboration tools, social messaging platforms, or
 
 ### Real-Time Communication
 
-* ws
+* Socket.IO
 
 ### File Handling
 
