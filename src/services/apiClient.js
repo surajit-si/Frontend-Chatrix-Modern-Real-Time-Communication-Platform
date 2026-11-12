@@ -1,7 +1,6 @@
 import axios from "axios";
 import devErrorLog from "../utils/devErrorLog";
-
-const DEFAULT_URL = import.meta.env.VITE_API_URL;
+import { DEFAULT_URL } from "../constants.js";
 
 //config
 const apiClient = axios.create({

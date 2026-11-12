@@ -1,4 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
+import axios from "axios";
 //icons
 import { IoSearchSharp } from "react-icons/io5";
 import { HiDotsVertical } from "react-icons/hi";
@@ -19,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { userDataActions } from "../store/userDataSlice";
 import devErrorLog from "../utils/devErrorLog.js";
 import { useSocket } from "../context/socketContext.jsx";
+import apiClient from "../services/apiClient.js";
 
 function RightSideHome({ className, ref }) {
   //open menu if user clicks
@@ -54,7 +56,7 @@ function RightSideHome({ className, ref }) {
     postFormData.append("conversationId", selectedGroup?._id);
 
     try {
-      const response = await addMember(postFormData);
+      await addMember(postFormData);
       setIsAddingNewMember(false);
       setIsMenuOpen(false);
     } catch (error) {
@@ -176,6 +178,26 @@ function RightSideHome({ className, ref }) {
 
   const deleteGroupAsAdmin = () => {
     deleteGroup({ conversationId: selectedGroup._id });
+  };
+
+  //selectImage for sending in messages
+  const handleImageSelect = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+
+    formData.append("image", file);
+
+    try {
+      const response = await apiClient.post("/users/send-image", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   //leave group show logic
@@ -333,13 +355,30 @@ function RightSideHome({ className, ref }) {
             {/* input Box */}
             <div className="absolute bottom-0 w-full px-2 mx-auto py-2 z-50">
               <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+                style={{ display: "none" }}
+              >
+                <input
+                  type="file"
+                  name="image"
+                  id="messageImage"
+                  accept="image/*"
+                  onChange={handleImageSelect}
+                />
+              </form>
+
+              <form
                 className=" rounded-4xl bg-(--bg-light) w-full p-1 flex border border-(--border)! "
                 autoFocus
                 spellCheck={false}
                 onSubmit={sendMessage}
               >
                 {/* Atachment Button */}
-                <IoAttachOutline className="text-(--text) text-[1.3rem] box-content! p-2 cursor-pointer hover:bg-(--bg) rounded-full transition-colors" />
+                <label htmlFor="messageImage">
+                  <IoAttachOutline className="text-(--text) text-[1.3rem] box-content! p-2 cursor-pointer hover:bg-(--bg) rounded-full transition-colors" />
+                </label>
                 {/* Input Field */}
                 <input
                   type="text"
