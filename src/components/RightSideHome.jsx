@@ -130,6 +130,8 @@ function RightSideHome({ className, ref }) {
       //set incoming messages to show in viwe-port
       const conversationId = data.message.conversation._id;
       const newMessage = data.message;
+      console.log(newMessage);
+
       dispatch(
         userDataActions.addNewMessages({
           conversationId: conversationId,
