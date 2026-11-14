@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 //icons
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -29,13 +29,6 @@ function LeftSideHome({ className, setOnChat, ref }) {
   const menuRef = useRef();
   const profileMenu = useRef();
 
-  /* const {
-    userData,
-    setUserData,
-    conversationMessages,
-    setConversationMessages,
-  } = useContext(UserContext); */
-
   //redux-toolkit userData
   const { userData, conversationMessages } = useSelector(
     (state) => state.userData,
@@ -58,7 +51,9 @@ function LeftSideHome({ className, setOnChat, ref }) {
     logout();
   }
 
-  //create Conversation
+  //* create Conversation
+  //* loading button of submit
+  const [isCreationSubmiting, setIsCreationSubmiting] = useState(false);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -71,7 +66,13 @@ function LeftSideHome({ className, setOnChat, ref }) {
     postFormData.append("groupName", groupName);
 
     try {
-      await createConversation(postFormData);
+      setIsCreationSubmiting(true);
+      const conversation = await createConversation(postFormData);
+      console.log(conversation);
+      if (conversation.status == 201) {
+        setIsCreationSubmiting(false);
+        setIsCreating(false);
+      }
       setPreview(null);
       groupNameInput.current.value = null;
       try {
@@ -265,8 +266,21 @@ function LeftSideHome({ className, setOnChat, ref }) {
                     required
                   />
 
-                  <button className="btn btn-primary mt-2" type="submit">
-                    Button
+                  <button
+                    className={`${isCreationSubmiting && "opacity-70"} btn btn-primary mt-2`}
+                    type="submit"
+                  >
+                    {isCreationSubmiting ? (
+                      <div
+                        className="spinner-border spinner-sm aspect-auto"
+                        style={{ width: "1.2rem", height: "1.2rem" }}
+                        role="status"
+                      >
+                        <span className="visually-hidden">Loading…</span>
+                      </div>
+                    ) : (
+                      "Button"
+                    )}
                   </button>
                 </form>
               </div>
