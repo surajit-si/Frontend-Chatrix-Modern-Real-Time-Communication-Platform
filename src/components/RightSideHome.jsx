@@ -21,6 +21,8 @@ import { userDataActions } from "../store/userDataSlice";
 import devErrorLog from "../utils/devErrorLog.js";
 import { useSocket } from "../context/socketContext.jsx";
 import apiClient from "../services/apiClient.js";
+import ImageSendByMe from "./ImageSendByMe.jsx";
+import ImageSendByOthers from "./ImageSendByOthers.jsx";
 
 function RightSideHome({ className, ref }) {
   //open menu if user clicks
@@ -188,13 +190,42 @@ function RightSideHome({ className, ref }) {
     const formData = new FormData();
 
     formData.append("image", file);
+    formData.append("conversationId", selectedGroup?._id);
 
     try {
       const response = await apiClient.post("/users/send-image", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      console.log(response.data);
+      if (response.status !== 200) {
+        alert("image not sended!");
+      }
+
+      const imageData = response.data.data;
+
+      socket.emit("send-image", {
+        currConversation: selectedGroup,
+        content: imageData.secure_url,
+        messageType: "image",
+        height: imageData.height,
+        width: imageData.width,
+        format: imageData.format,
+        bytes: imageData.bytes,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+
+      //update messages array
+      console.log(selectedGroup);
+
+      //create message obj
+      /* const newMessage = {
+        content: messageText.trim(),
+        conversation: selectedGroup,
+        messageType: "text",
+        sender: userProfile,
+        createdAt: Date.now(),
+      }; */
     } catch (error) {
       console.error(error);
     }
@@ -397,35 +428,59 @@ function RightSideHome({ className, ref }) {
             </div>
 
             {/* messages */}
+            {console.log(conversationMessages)}
             {(conversationMessages[selectedGroup._id] || []).map((message) => {
               if (message?.sender._id == userProfile._id) {
                 const msgDate = new Date(message.createdAt);
                 const msgTime = msgDate.toLocaleTimeString("en-US", {
-                  hour: "2-digit", // Forces two digits (e.g., "05" or "10")
-                  minute: "2-digit", // Forces two digits (e.g., "15")
-                  hour12: true, // Forces AM/PM clock instead of 24-hour clock
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
                 });
-                return (
-                  <MessageContainerByMe
-                    key={message._id}
-                    messageText={message.content}
-                    time={msgTime}
-                  />
-                );
+
+                if (message.messageType == "text") {
+                  //? If type of message is text
+                  return (
+                    <MessageContainerByMe
+                      key={message._id}
+                      messageText={message.content}
+                      time={msgTime}
+                    />
+                  );
+                } else if (message.messageType == "image") {
+                  //? If type of message is image
+                  return (
+                    <ImageSendByMe
+                      message={message}
+                      time={msgTime}
+                      key={message._id}
+                    />
+                  );
+                }
               } else if (message?.sender._id != userProfile._id) {
                 const msgDate = new Date(message.createdAt);
                 const msgTime = msgDate.toLocaleTimeString("en-US", {
-                  hour: "2-digit", // Forces two digits (e.g., "05" or "10")
-                  minute: "2-digit", // Forces two digits (e.g., "15")
-                  hour12: true, // Forces AM/PM clock instead of 24-hour clock
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
                 });
-                return (
-                  <MessageContainerByOthers
-                    key={message._id}
+
+                if (message.messageType == "text") {
+                  //? If type of message is text
+                  return (
+                    <MessageContainerByOthers
+                      key={message._id}
+                      message={message}
+                      time={msgTime}
+                    />
+                  );
+                } else if (message.messageType == "image") {
+                 return <ImageSendByOthers
                     message={message}
                     time={msgTime}
-                  />
-                );
+                    key={message._id}
+                  />;
+                }
               }
             })}
           </div>
