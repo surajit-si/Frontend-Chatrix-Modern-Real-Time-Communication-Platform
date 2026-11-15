@@ -5,7 +5,7 @@ const currentGroupSlice = createSlice({
   initialState: null,
   reducers: {
     setCurrGroup: (state, action) => {
-      if (action.payload) {
+      if (action.payload !== undefined) {
         return action.payload;
       }
       return state;

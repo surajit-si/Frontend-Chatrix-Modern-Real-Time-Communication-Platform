@@ -23,6 +23,7 @@ import { useSocket } from "../context/socketContext.jsx";
 import apiClient from "../services/apiClient.js";
 import ImageSendByMe from "./ImageSendByMe.jsx";
 import ImageSendByOthers from "./ImageSendByOthers.jsx";
+import { currGroupActions } from "../store/currentGroupSlice.js";
 
 function RightSideHome({ className, ref }) {
   //open menu if user clicks
@@ -134,7 +135,6 @@ function RightSideHome({ className, ref }) {
       //set incoming messages to show in viwe-port
       const conversationId = data.message.conversation._id;
       const newMessage = data.message;
-      console.log(newMessage);
 
       dispatch(
         userDataActions.addNewMessages({
@@ -178,8 +178,23 @@ function RightSideHome({ className, ref }) {
     };
   }, [socket]);
 
-  const deleteGroupAsAdmin = () => {
-    deleteGroup({ conversationId: selectedGroup._id });
+  const deleteGroupAsAdmin = async () => {
+    const res = await deleteGroup({ conversationId: selectedGroup._id });
+
+    if (res.status == 200) {
+      try {
+        const response = await getUser();
+        const payload = response?.data?.data ?? response?.data;
+        dispatch(userDataActions.setUserData(payload));
+        setIsMenuOpen(false);
+        dispatch(currGroupActions.setCurrGroup(null));
+      } catch (error) {
+        dispatch(userDataActions.setUserData(null));
+        if (import.meta.env.VITE_NODE_ENV === "development") {
+          devErrorLog(error);
+        }
+      }
+    }
   };
 
   //selectImage for sending in messages
@@ -475,11 +490,13 @@ function RightSideHome({ className, ref }) {
                     />
                   );
                 } else if (message.messageType == "image") {
-                 return <ImageSendByOthers
-                    message={message}
-                    time={msgTime}
-                    key={message._id}
-                  />;
+                  return (
+                    <ImageSendByOthers
+                      message={message}
+                      time={msgTime}
+                      key={message._id}
+                    />
+                  );
                 }
               }
             })}
