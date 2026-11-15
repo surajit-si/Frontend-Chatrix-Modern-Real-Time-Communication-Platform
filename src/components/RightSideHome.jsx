@@ -231,7 +231,6 @@ function RightSideHome({ className, ref }) {
       });
 
       //update messages array
-      console.log(selectedGroup);
 
       //create message obj
       /* const newMessage = {
@@ -443,7 +442,6 @@ function RightSideHome({ className, ref }) {
             </div>
 
             {/* messages */}
-            {console.log(conversationMessages)}
             {(conversationMessages[selectedGroup._id] || []).map((message) => {
               if (message?.sender._id == userProfile._id) {
                 const msgDate = new Date(message.createdAt);

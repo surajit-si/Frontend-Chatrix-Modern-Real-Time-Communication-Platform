@@ -68,7 +68,6 @@ function LeftSideHome({ className, setOnChat, ref }) {
     try {
       setIsCreationSubmiting(true);
       const conversation = await createConversation(postFormData);
-      console.log(conversation);
       if (conversation.status == 201) {
         setIsCreationSubmiting(false);
         setIsCreating(false);
